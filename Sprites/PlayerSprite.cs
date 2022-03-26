@@ -16,6 +16,8 @@ namespace TimeGame.Sprites
         public PlayerSprite()
         {
             Position = new Vector2(250, 225);
+            this.pixelWidth = 64;
+            this.pixelHeight = 128;
         }
 
         private MouseState mouseState;
@@ -57,8 +59,6 @@ namespace TimeGame.Sprites
         /// </summary>
         public BoundingCircle Bounds => bounds;
 
-        private short animationFrame;
-
         /// <summary>
         /// 
         /// </summary>
@@ -76,7 +76,7 @@ namespace TimeGame.Sprites
         /// <param name="content">The ContentManager to load with</param>
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("64-64-sprite-pack");
+            texture = content.Load<Texture2D>("Player");
         }
 
         /// <summary>
@@ -115,6 +115,10 @@ namespace TimeGame.Sprites
             bounds.Center.Y = Position.Y - 16;
         }
 
+
+        private short animationFrame;
+        private double animationTime;
+        private short powerUp;
         /// <summary>
         /// Draws the animated ball
         /// </summary>
@@ -123,11 +127,21 @@ namespace TimeGame.Sprites
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Update animation frame
-            if (Direction.Y < 0) animationFrame = 0;
-            else animationFrame = 1;
+            animationTime += gameTime.ElapsedGameTime.TotalSeconds;
+            if (animationTime > .3)
+            {
+                animationFrame++;
+                animationTime = 0;
+            }
+            if (animationFrame > 2)
+            {
+                animationFrame = 0;
+            }
+            //if (Direction.Y < 0) animationFrame = 0;
+            //else animationFrame = 1;
 
             //Draw the sprite
-            var source = new Rectangle(animationFrame * 32, 0, 32, 32);
+            var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
         }
     }
