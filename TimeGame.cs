@@ -24,9 +24,11 @@ namespace TimeGame
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
+        private bool hasBeenHit = false;
+        private KeyboardState keyboardState;
+        private KeyboardState previousKeyboard;
 
         public PlayerSprite player;
-
         public List<EnemySprite> enemies;
 
         /// <summary>
@@ -40,7 +42,6 @@ namespace TimeGame
         public static int GAME_HEIGHT = 480;
 
         public BoundingRectangle gameBoundTop;
-
         public BoundingRectangle gameBoundBottom;
 
         public TimeGame()
@@ -62,7 +63,7 @@ namespace TimeGame
             player = new PlayerSprite();
             enemies = new List<EnemySprite>();
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 32, GAME_WIDTH, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-64, GAME_WIDTH, 0);
             base.Initialize();
         }
 
@@ -79,7 +80,12 @@ namespace TimeGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            previousKeyboard = keyboardState;
+            keyboardState = Keyboard.GetState();
+            //holding onto incase we want to use a controller
+            //GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+
+            if (keyboardState != previousKeyboard && Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 lives--;
                 if (lives > 0)
@@ -89,12 +95,16 @@ namespace TimeGame
                 else
                 {
                     state = GameState.Lost;
-                    //Exit();
+                    Exit();
                 }
             }
-            //Gameplay occurs here
-            if (state == GameState.InPlay)
+            if (state == GameState.Pause) //logic for upgrades go here
             {
+
+            }
+            else if (state == GameState.InPlay) //Gameplay occurs here
+            {
+                hasBeenHit = false;
                 if (enemies.Count < 5)
                 {
                     Random r = new Random();
@@ -116,19 +126,27 @@ namespace TimeGame
                     e.Update(gameTime);
                     if (e.Bounds.CollidesWith(player.Bounds))
                     {
-                        lives--;
-                        if (lives > 0)
-                        {
-                            state = GameState.Pause;
-                        }
-                        else
-                        {
-                            state = GameState.Lost;
-                        }
+                        hasBeenHit = true;
+                        //e.Deactivate
+                    }
+                }
+                if (hasBeenHit)
+                {
+                    lives--;
+                    if (lives > 0)
+                    {
+                        state = GameState.Pause;
+                    }
+                    else
+                    {
+                        state = GameState.Lost;
                     }
                 }
             }
-
+            else //game hasn't started or is over
+            {
+            
+            }
             base.Update(gameTime);
         }
 
