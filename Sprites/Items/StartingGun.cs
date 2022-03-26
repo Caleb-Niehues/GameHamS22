@@ -39,7 +39,7 @@ namespace TimeGame.Sprites.Items
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var source = new Rectangle(0, ArmPowerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
-            spriteBatch.Draw(texture, Position, source, Color.White, rotation, new Vector2(this.pixelHeight / 2, this.pixelHeight / 2), 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, Position, source, Color.White, rotationdir, new Vector2(this.pixelHeight / 2, this.pixelHeight / 2), 1, SpriteEffects.None, 0);
         }
     }
 }

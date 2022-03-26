@@ -117,8 +117,10 @@ namespace TimeGame.Sprites
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
 
+
             if(Arm is StartingGun sg)
             {
+                sg.BodyPosition = Position;
                 sg.ArmPowerUp = powerUp;
             }
             Arm.Update(gameTime);
