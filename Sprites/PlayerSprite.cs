@@ -15,7 +15,7 @@ namespace TimeGame.Sprites
 
         public PlayerSprite()
         {
-            Position = new Vector2(600, 300);
+            Position = new Vector2(250, 225);
         }
 
         private MouseState mouseState;
@@ -23,7 +23,7 @@ namespace TimeGame.Sprites
 
         private bool up;
 
-        private Vector2 direction = new Vector2(1, -1);
+        private Vector2 direction = new Vector2(0, -1);
 
         /// <summary>
         /// 
@@ -92,11 +92,18 @@ namespace TimeGame.Sprites
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
 
-                direction.X = 0;
-                if (up) direction.Y = 1;
-                else direction.Y = -1;
+                if (up)
+                {
+                    direction.Y = 1;
+                    up = false;
+                }
+                else
+                {
+                    direction.Y = -1;
+                    up = true;
+                }
               
-                speed = 50;
+                speed = 250;
             }
             else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
             {

@@ -7380,19 +7380,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Chenr\\.nuget\\packages\\": {}
+    "C:\\Users\\Cole\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj",
+      "projectUniqueName": "C:\\Users\\Cole\\source\\repos\\GameHam\\TimeGame.csproj",
       "projectName": "TimeGame",
-      "projectPath": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj",
-      "packagesPath": "C:\\Users\\Chenr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\obj\\",
+      "projectPath": "C:\\Users\\Cole\\source\\repos\\GameHam\\TimeGame.csproj",
+      "packagesPath": "C:\\Users\\Cole\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Cole\\source\\repos\\GameHam\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Chenr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Cole\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7445,7 +7450,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.212\\RuntimeIdentifierGraph.json"
       }
     }
   }
