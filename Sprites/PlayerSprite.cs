@@ -12,6 +12,12 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
+
+        public PlayerSprite()
+        {
+            Position = new Vector2(600, 300);
+        }
+
         private MouseState mouseState;
         private MouseState previousMouseState;
 
