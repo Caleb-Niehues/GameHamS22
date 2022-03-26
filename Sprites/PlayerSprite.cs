@@ -21,7 +21,7 @@ namespace TimeGame.Sprites
         private MouseState mouseState;
         private MouseState previousMouseState;
 
-        private bool up;
+        public bool Up;
 
         private Vector2 direction = new Vector2(0, -1);
 
@@ -92,15 +92,15 @@ namespace TimeGame.Sprites
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
 
-                if (up)
+                if (Up)
                 {
                     direction.Y = 1;
-                    up = false;
+                    Up = false;
                 }
                 else
                 {
                     direction.Y = -1;
-                    up = true;
+                    Up = true;
                 }
               
                 speed = 250;
