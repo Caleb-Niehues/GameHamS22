@@ -9,10 +9,21 @@ using System;
 
 namespace TimeGame
 {
+    public enum GameState
+    {
+        Unstarted, //useful for a title screen
+        InPlay,
+        Pause, //used for the menu/pause screen
+        Lost
+    }
+
     public class TimeGame : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private GameState state = GameState.InPlay;
+        private int lives = 3;
 
         public PlayerSprite player;
 
@@ -76,32 +87,53 @@ namespace TimeGame
 
         protected override void Update(GameTime gameTime)
         {
-
-            if (enemies.Count < difficulty)
-            {
-                Random r = new Random();
-                int outerBounds = GAME_WIDTH + 60;
-                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                EnemySprite enemy = new EnemySprite(pos, player);
-                enemy.LoadContent(this.Content);
-                enemies.Add(enemy);
-            }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
             {
-                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
-                if (player.Up) player.Up = false;
-                else player.Up = true;
-            }
-            // TODO: Add your update logic here
-            foreach (EnemySprite e in enemies)
-            {
-                e.Update(gameTime);
-                if (player.Bounds.CollidesWith(e.Bounds))
+                lives--;
+                if (lives > 0)
                 {
-                    enemies.Remove(e);
-                    
+                    state = GameState.Pause;
+                }
+                else
+                {
+                    state = GameState.Lost;
+                    //Exit();
+                }
+            }
+            //Gameplay occurs here
+            if (state == GameState.InPlay)
+            {
+                if (enemies.Count < 5)
+                {
+                    Random r = new Random();
+                    int outerBounds = GAME_WIDTH + 60;
+                    Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                    EnemySprite enemy = new EnemySprite(pos, player);
+                    enemy.LoadContent(this.Content);
+                    enemies.Add(enemy);
+                }
+                if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
+                {
+                    player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
+                    if (player.Up) player.Up = false;
+                    else player.Up = true;
+                }
+                player.Update(gameTime);
+                foreach (EnemySprite e in enemies)
+                {
+                    e.Update(gameTime);
+                    if (e.Bounds.CollidesWith(player.Bounds))
+                    {
+                        lives--;
+                        if (lives > 0)
+                        {
+                            state = GameState.Pause;
+                        }
+                        else
+                        {
+                            state = GameState.Lost;
+                        }
+                    }
                 }
             }
 
@@ -114,10 +146,21 @@ namespace TimeGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-            player.Draw(gameTime, _spriteBatch);
-            foreach (EnemySprite e in enemies)
+            switch (state)
             {
-                e.Draw(gameTime, _spriteBatch);
+                case GameState.Lost:
+                    break;
+                case GameState.Pause:
+                    break;
+                case GameState.Unstarted:
+                    break;
+                default:
+                    player.Draw(gameTime, _spriteBatch);
+                    foreach (EnemySprite e in enemies)
+                    {
+                        e.Draw(gameTime, _spriteBatch);
+                    }
+                    break;
             }
             _spriteBatch.End();
             // TODO: Add your drawing code here
