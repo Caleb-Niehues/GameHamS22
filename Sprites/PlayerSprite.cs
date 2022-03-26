@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TimeGame.Collisions;
+using TimeGame.Sprites.Items;
 
 namespace TimeGame.Sprites
 {
@@ -12,12 +13,13 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
-
+        public Item Arm;
         public PlayerSprite()
         {
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
             this.pixelHeight = 128;
+            Arm = new StartingGun(Position);
         }
 
         private MouseState mouseState;
@@ -77,6 +79,7 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Player");
+            Arm.LoadContent(content);
         }
 
         /// <summary>
@@ -113,6 +116,8 @@ namespace TimeGame.Sprites
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
+
+            Arm.Update(gameTime);
         }
 
 
@@ -143,6 +148,7 @@ namespace TimeGame.Sprites
             //Draw the sprite
             var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
+            Arm.Draw(gameTime, spriteBatch);
         }
     }
 }

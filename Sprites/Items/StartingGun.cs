@@ -10,8 +10,9 @@ namespace TimeGame.Sprites.Items
 {
     public class StartingGun : Item
     {
-        public StartingGun()
+        public StartingGun(Vector2 position)
         {
+            this.Position = position;
             this.pixelWidth = 64;
             this.pixelHeight = 32; 
         }
