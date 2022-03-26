@@ -15,6 +15,7 @@ namespace TimeGame.Sprites
         private MouseState mouseState;
         private MouseState previousMouseState;
 
+        private bool up;
 
         private Vector2 direction = new Vector2(1, -1);
 
@@ -84,18 +85,19 @@ namespace TimeGame.Sprites
             //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
-                direction.X = 1;
-                direction.Y *= -1;
+
+                direction.X = 0;
+                if (up) direction.Y = 1;
+                else direction.Y = -1;
+              
                 speed = 50;
             }
             else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
             {
-                direction.X = -1;
-                direction.Y *= -1;
-                speed = 150;
+                
             }
 
-            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
+            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
         }
