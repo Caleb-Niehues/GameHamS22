@@ -14,7 +14,7 @@ namespace TimeGame
 
         public PlayerSprite player;
 
-        private List<EnemySprite> enemies;
+        public List<EnemySprite> enemies;
 
         /// <summary>
         /// The width of the game world
@@ -25,6 +25,10 @@ namespace TimeGame
         /// The height of the game world
         /// </summary>
         public static int GAME_HEIGHT = 480;
+
+        public BoundingRectangle gameBoundTop;
+
+        public BoundingRectangle gameBoundBottom;
 
         public TimeGame()
         {
@@ -43,7 +47,8 @@ namespace TimeGame
         {
             // TODO: Add your initialization logic here
             player = new PlayerSprite();
-
+            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT -32 , GAME_WIDTH, 0);
             base.Initialize();
         }
 
@@ -59,7 +64,10 @@ namespace TimeGame
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
+            {
+                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
+            }
             // TODO: Add your update logic here
             player.Update(gameTime);
             base.Update(gameTime);
