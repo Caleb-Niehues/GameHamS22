@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeGame", "TimeGame.csproj", "{84088F65-F40D-49B1-8E7A-F90AAA57C417}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84088F65-F40D-49B1-8E7A-F90AAA57C417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84088F65-F40D-49B1-8E7A-F90AAA57C417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84088F65-F40D-49B1-8E7A-F90AAA57C417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84088F65-F40D-49B1-8E7A-F90AAA57C417}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7AB91AA2-A490-4B09-A89C-E56073EDF448}
+	EndGlobalSection
+EndGlobal
