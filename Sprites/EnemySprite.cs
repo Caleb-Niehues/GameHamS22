@@ -10,9 +10,22 @@ namespace TimeGame.Sprites
 {
     public class EnemySprite : Sprite
     {
+
+        public EnemySprite(Vector2 position, PlayerSprite p)
+        {
+            Position = position;
+            player = p;
+            speed = 50;
+        }
+
         public Texture2D enemyText;
 
+        private PlayerSprite player;
+
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
+
+        private double waitTimerX = 0;
+        private double waitTimerY = 0;
 
         private int speed;
         public int Speed
@@ -43,7 +56,31 @@ namespace TimeGame.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
+            float x = -1;
+            float y = 1;
+            //waitTimerX += gameTime.ElapsedGameTime.TotalSeconds;
+            //waitTimerY += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Position.X > player.Position.X)
+                x = -1;
+            else
+                x = 1;
+
+
+
+            if (Position.Y > player.Position.Y)
+                y = -1;
+            else
+                y = 1;
+            waitTimerY -= 2.0;
+
+
+
+
+
+            Direction = new Vector2(x, y);
+
+            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
         }
