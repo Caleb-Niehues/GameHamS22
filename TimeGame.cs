@@ -32,6 +32,14 @@ namespace TimeGame
         public PlayerSprite player;
         public List<EnemySprite> enemies;
 
+        public EnemySprite[] enemies2 = new EnemySprite[10];
+
+        public Queue<EnemySprite> freeEnemies;
+
+        public int difficulty = 2;
+
+
+
         /// <summary>
         /// The width of the game world
         /// </summary>
@@ -157,6 +165,37 @@ namespace TimeGame
             {
             
             }
+
+            if (enemies.Count < difficulty)
+            {
+                Random r = new Random();
+                int outerBounds = GAME_WIDTH + 60;
+                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                EnemySprite enemy = new EnemySprite(pos, player);
+                enemy.LoadContent(this.Content);
+                enemies.Add(enemy);
+            }
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
+            {
+                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
+                if (player.Up) player.Up = false;
+                else player.Up = true;
+            }
+            // TODO: Add your update logic here
+            foreach (EnemySprite e in enemies)
+            {
+                e.Update(gameTime);
+                if (player.Bounds.CollidesWith(e.Bounds))
+                {
+                    enemies.Remove(e);
+                    
+                }
+            }
+
+            
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 

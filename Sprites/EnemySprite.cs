@@ -15,7 +15,8 @@ namespace TimeGame.Sprites
         {
             Position = position;
             player = p;
-            speed = 50;
+            Random r = new Random(); 
+            speed = r.Next(50,200);
         }
 
         public Texture2D enemyText;
