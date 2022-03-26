@@ -15,7 +15,6 @@ namespace TimeGame.Sprites
         private MouseState mouseState;
         private MouseState previousMouseState;
 
-
         private Vector2 direction = new Vector2(1, -1);
 
         /// <summary>
