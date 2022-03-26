@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj": {}
+    "C:\\Users\\Cole\\Source\\Repos\\GameHam\\TimeGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj": {
+    "C:\\Users\\Cole\\Source\\Repos\\GameHam\\TimeGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj",
+        "projectUniqueName": "C:\\Users\\Cole\\Source\\Repos\\GameHam\\TimeGame.csproj",
         "projectName": "TimeGame",
-        "projectPath": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\TimeGame.csproj",
-        "packagesPath": "C:\\Users\\Chenr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Chenr\\Source\\Repos\\GameHamS22\\obj\\",
+        "projectPath": "C:\\Users\\Cole\\Source\\Repos\\GameHam\\TimeGame.csproj",
+        "packagesPath": "C:\\Users\\Cole\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Cole\\Source\\Repos\\GameHam\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Chenr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Cole\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,16 +43,6 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
-          "dependencies": {
-            "MonoGame.Content.Builder.Task": {
-              "target": "Package",
-              "version": "[3.8.0.1641, )"
-            },
-            "MonoGame.Framework.WindowsDX": {
-              "target": "Package",
-              "version": "[3.8.0.1641, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -59,15 +53,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            },
-            "Microsoft.WindowsDesktop.App.WindowsForms": {
-              "privateAssets": "none"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.212\\RuntimeIdentifierGraph.json"
         }
       }
     }
