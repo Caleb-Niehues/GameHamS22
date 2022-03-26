@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using TimeGame.Sprites;
+using TimeGame.Collisions;
 
 namespace TimeGame
 {
@@ -9,6 +11,10 @@ namespace TimeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        public PlayerSprite player;
+
+        private List<EnemySprite> enemies;
 
         /// <summary>
         /// The width of the game world
@@ -36,6 +42,7 @@ namespace TimeGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            player = new PlayerSprite();
 
             base.Initialize();
         }
