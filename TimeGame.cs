@@ -18,6 +18,12 @@ namespace TimeGame
 
         public List<EnemySprite> enemies;
 
+        public EnemySprite[] enemies2 = new EnemySprite[10];
+
+        public Queue<EnemySprite> freeEnemies;
+
+        public int difficulty = 2;
+
 
 
         /// <summary>
@@ -71,7 +77,7 @@ namespace TimeGame
         protected override void Update(GameTime gameTime)
         {
 
-            if (enemies.Count < 5)
+            if (enemies.Count < difficulty)
             {
                 Random r = new Random();
                 int outerBounds = GAME_WIDTH + 60;
@@ -92,7 +98,14 @@ namespace TimeGame
             foreach (EnemySprite e in enemies)
             {
                 e.Update(gameTime);
+                if (player.Bounds.CollidesWith(e.Bounds))
+                {
+                    enemies.Remove(e);
+                    
+                }
             }
+
+            
             player.Update(gameTime);
             base.Update(gameTime);
         }

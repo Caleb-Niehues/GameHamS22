@@ -15,7 +15,8 @@ namespace TimeGame.Sprites
         {
             Position = position;
             player = p;
-            speed = 50;
+            Random r = new Random(); 
+            speed = r.Next(50,200);
         }
 
         public Texture2D enemyText;
@@ -23,6 +24,7 @@ namespace TimeGame.Sprites
         private PlayerSprite player;
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
+        public BoundingCircle Bounds => bounds;
 
         private double waitTimerX = 0;
         private double waitTimerY = 0;

@@ -23,7 +23,7 @@ namespace TimeGame.Sprites
 
         public bool Up;
 
-        private Vector2 direction = new Vector2(0, -1);
+        private Vector2 direction = new Vector2(0, 1);
 
         /// <summary>
         /// 
