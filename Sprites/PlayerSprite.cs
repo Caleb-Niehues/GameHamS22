@@ -19,7 +19,7 @@ namespace TimeGame.Sprites
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
             this.pixelHeight = 128;
-            Arm = new StartingGun(Position);
+            Arm = new StartingGun(Position, new Vector2(32, 39));
         }
 
         private MouseState mouseState;
@@ -117,6 +117,10 @@ namespace TimeGame.Sprites
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
 
+            if(Arm is StartingGun sg)
+            {
+                sg.ArmPowerUp = powerUp;
+            }
             Arm.Update(gameTime);
         }
 
