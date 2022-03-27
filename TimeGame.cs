@@ -404,7 +404,7 @@ namespace TimeGame
                             state = GameState.Pause;
                             if (j > 0) j--;
                         }
-                        else if (charger[j].Bounds.CollidesWith(enemies[i].Bounds))
+                        else if (charger[j].Bounds.CollidesWith(enemies[i].Bounds) && !dead)
                         {
                             dead = true;
                         }

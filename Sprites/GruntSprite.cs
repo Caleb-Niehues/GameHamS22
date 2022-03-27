@@ -47,7 +47,7 @@ namespace TimeGame.Sprites
             direction = new Vector2(1, 0);
             pixelHeight = 64;
             pixelWidth = 64;
-            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth / 2, Position.Y + pixelHeight / 2), pixelWidth/2);
+            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth /2, Position.Y + pixelHeight /2), pixelWidth);
         }
 
         public override void LoadContent(ContentManager content)
@@ -81,8 +81,8 @@ namespace TimeGame.Sprites
             Direction = new Vector2(x, y);
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
-            bounds.Center.X = Position.X + pixelWidth / 2;
-            bounds.Center.Y = Position.Y + pixelHeight / 2;
+            bounds.Center.X = Position.X + pixelWidth /2;
+            bounds.Center.Y = Position.Y + pixelHeight /2;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
