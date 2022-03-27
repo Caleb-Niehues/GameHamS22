@@ -84,6 +84,10 @@ namespace TimeGame
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
 
+            //Pause.Width = GAME_WIDTH;
+            //Pause.Width = GAME_HEIGHT;
+            Lost.Width = GAME_WIDTH;
+            Lost.Width = GAME_HEIGHT;
             Window.Title = "The Great Work";
         }
 

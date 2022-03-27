@@ -8,6 +8,9 @@ namespace TimeGame.Screens
     {
         static Texture2D pixel;
         static SpriteFont Bangers;
+
+        public static int Width = 710;
+        public static int Height = 430;
         public static void LoadContent(ContentManager Content)
         {
             pixel = Content.Load<Texture2D>("PIXEL");
@@ -15,7 +18,7 @@ namespace TimeGame.Screens
         }
         public static void Draw(SpriteBatch spriteBatch, int score, int[] upgrades)
         {
-            spriteBatch.Draw(pixel, new Rectangle(50, 50, 710, 430), Color.Black * 0.6f); //change Color.Black to Color.Black * 0.8f
+            spriteBatch.Draw(pixel, new Rectangle(50, 50, Width, Height), Color.Black * 0.6f); //change Color.Black to Color.Black * 0.8f
             spriteBatch.DrawString(Bangers, "Shop, spend your points on upgrades: " + score, new Vector2(100, 100), Color.Gold, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
             spriteBatch.DrawString(Bangers, "Press ESC to continue", new Vector2(100, 150), Color.Gold, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
             spriteBatch.DrawString(Bangers, "Press Q to upgrade power ups, current level: " + upgrades[0].ToString(), new Vector2(100, 200), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
