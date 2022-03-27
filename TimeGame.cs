@@ -28,6 +28,7 @@ namespace TimeGame
 
 
         public PlayerSprite player;
+        public Tilemap _tilemap;
 
         public List<EnemySprite> enemies2;
 
@@ -43,12 +44,12 @@ namespace TimeGame
         /// <summary>
         /// The width of the game world
         /// </summary>
-        public static int GAME_WIDTH = 760;
+        public static int GAME_WIDTH = 64* 12;
 
         /// <summary>
         /// The height of the game world
         /// </summary>
-        public static int GAME_HEIGHT = 480;
+        public static int GAME_HEIGHT = 64 * 8;
 
         public BoundingRectangle gameBoundTop;
 
@@ -73,8 +74,9 @@ namespace TimeGame
         {
             // TODO: Add your initialization logic here
             player = new PlayerSprite();
-            
-            
+            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
+
+
             enemies = new List<EnemySprite>();
             deadEnemies = new List<EnemySprite>();
             
@@ -102,7 +104,8 @@ namespace TimeGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
-            
+            _tilemap.LoadContent(this.Content);
+
             foreach (EnemySprite e in enemies)
             {
                 e.LoadContent(this.Content);
@@ -193,9 +196,25 @@ namespace TimeGame
             base.Update(gameTime);
         }
 
+        Matrix translation = new Matrix();
+        double translationTimer;
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            translationTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (translationTimer > .1)
+            {
+                translation = Matrix.CreateTranslation(translation.Translation.X - 1, 0, 0);
+                if (translation.Translation.X <= -64)
+                {
+                    _tilemap.newFrame();
+                    translation = Matrix.CreateTranslation(0, 0, 0);
+                }
+            }
+            _spriteBatch.Begin(transformMatrix: translation);
+            _tilemap.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+
             _spriteBatch.Begin();
             switch (state)
             {
