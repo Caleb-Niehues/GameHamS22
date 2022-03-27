@@ -45,11 +45,12 @@ namespace TimeGame
         public PlayerSprite player;
         public Tilemap _tilemap;
 
-        public List<GruntSprite> enemies2;
-
         public List<GruntSprite> enemies;
 
         public List<GruntSprite> deadEnemies;
+
+        public List<ChargerSprite> charger;
+        public List<ChargerSprite> chargerStandby;
 
         public double gunTimer = 0;
         public double shootTime = 2.0;
@@ -59,6 +60,8 @@ namespace TimeGame
 
         public List<Bullet> bullets;
         public List<Bullet> shotBullets;
+
+        public Random ran = new Random();
 
         /// <summary>
         /// The width of the game world
@@ -75,6 +78,8 @@ namespace TimeGame
         public BoundingRectangle gameBoundFront;
         public BoundingRectangle gameBoundBack;
 
+        public double chargerTimer = 0;
+        public double chargeWaitTime = 4.5;
 
         Matrix translation = new Matrix();
         double translationTimer;
@@ -106,6 +111,15 @@ namespace TimeGame
 
             bullets = new List<Bullet>();
             shotBullets = new List<Bullet>();
+
+            charger = new List<ChargerSprite>();
+            chargerStandby = new List<ChargerSprite>();
+
+            for(int i = 0; i < 10; i++)
+            {
+                ChargerSprite charge = new ChargerSprite();
+                chargerStandby.Add(charge);
+            }
 
             Random r = new Random();
             for (int i = 0; i < 10; i++)
@@ -154,6 +168,10 @@ namespace TimeGame
             foreach (Bullet b in shotBullets)
             {
                 b.LoadContent(Content);
+            }
+            foreach(ChargerSprite c in chargerStandby)
+            {
+                c.LoadContent(Content);
             }
         }
 
@@ -221,11 +239,21 @@ namespace TimeGame
             #region Gameplay
             else if (state == GameState.InPlay)
             {
+
+                chargerTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 currentMouse = Mouse.GetState();
                 riserCheck = gameTime.TotalGameTime.Seconds / 15;
                 if (riserCheck > difficulty && difficulty < 50) difficulty++;
-
+                if(chargerTimer > chargeWaitTime) 
+                {
+                    chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
+                    chargerStandby[0].pokeTimer = 0;
+                    charger.Add(chargerStandby[0]);
+                    chargerStandby.RemoveAt(0);
+                    chargerTimer = 0;
+                }
+                
                 //if (enemies.Count < difficulty)
                 //hasBeenHit = false;
                 if (gunTimer > shootTime)
@@ -299,6 +327,7 @@ namespace TimeGame
                             enemies.Remove(enemies[i]);
                             --i;
                         }
+                        
                     }
                     if (i < 0) i = 0;
                     bool dead = false;
@@ -330,6 +359,28 @@ namespace TimeGame
                         }
                         
                     }
+                    for (int j = 0; j < charger.Count; j++)
+                    {
+                        charger[j].Update(gameTime);
+                        if (charger[j].Bounds.CollidesWith(gameBoundBack))
+                        {
+                            chargerStandby.Add(charger[j]);
+                            charger.RemoveAt(j);
+                            if (j > 0) j--;
+                        }
+                        else if (charger[j].Bounds.CollidesWith(player.Bounds))
+                        {
+                            chargerStandby.Add(charger[j]);
+                            charger.RemoveAt(j);
+                            lives--;
+                            state = GameState.Pause;
+                            if (j > 0) j--;
+                        }
+                        else if (charger[j].Bounds.CollidesWith(enemies[i].Bounds))
+                        {
+                            dead = true;
+                        }
+                    }
                     if (dead)
                     {
                         enemies[i].Position = new Vector2(-10, -10);
@@ -338,6 +389,8 @@ namespace TimeGame
                         enemies.RemoveAt(i);
                         i--;
                     }
+                    
+
                 }
                 scoreBucket += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (scoreBucket > 100)
@@ -372,6 +425,12 @@ namespace TimeGame
             _spriteBatch.End();
 
             _spriteBatch.Begin();
+            
+            
+            foreach(ChargerSprite c in charger)
+            {
+                c.Draw(gameTime, _spriteBatch);
+            }
             player.Draw(gameTime, _spriteBatch);
             foreach (GruntSprite e in enemies)
             {

@@ -16,9 +16,15 @@ namespace TimeGame.Sprites
             get => direction;
             set => direction = value;
         }
-               
+
+        public double pokeTimer = 0;
+        public double pokeTiming = 1.5;
+
+        public double peakTimer = 0;
+        public double peakTiming = 1;
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
+        public BoundingCircle Bounds => bounds;
 
         private int speed;
         public int Speed
@@ -33,6 +39,10 @@ namespace TimeGame.Sprites
             pixelWidth = 128;
             pixelHeight = 96;
             Color = Color.White;
+            speed = 400;
+            pokeTimer = 0;
+            Random r = new Random();
+            Position = new Vector2(-64, r.Next(128, TimeGame.GAME_HEIGHT - 128));
         } 
 
         public override void LoadContent(ContentManager content)
@@ -42,14 +52,35 @@ namespace TimeGame.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
+            
+            
+            if (Position.X < 16) Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
+            else
+            {
+                pokeTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                if (pokeTimer > pokeTiming)
+                {
+                    Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
+
+                }
+            }
+            
             bounds.Center.X = Position.X - 16;
             bounds.Center.Y = Position.Y - 16;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
+            animationTime += gameTime.ElapsedGameTime.TotalSeconds;
+            if (animationTime > .3)
+            {
+                animationFrame++;
+                animationTime = 0;
+            }
+            if (animationFrame > 1)
+            {
+                animationFrame = 0;
+            }
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
