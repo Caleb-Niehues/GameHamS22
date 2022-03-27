@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace TimeGame.Screens
 {
-    public static class Lost
+    public static class Lose
     {
         static Texture2D pixel;
         static SpriteFont bangers;
