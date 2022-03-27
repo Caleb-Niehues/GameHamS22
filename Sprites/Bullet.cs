@@ -61,7 +61,7 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("64-64-sprite-pack");
-            Origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            Origin = new Vector2(0, texture.Height / 2);
         }
 
         public override void Update(GameTime gameTime)

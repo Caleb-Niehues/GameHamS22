@@ -6,6 +6,7 @@ using TimeGame.Sprites;
 using TimeGame.Collisions;
 using System;
 using TimeGame.Screens;
+using TimeGame.Sprites.Items;
 
 namespace TimeGame
 {
@@ -229,109 +230,56 @@ namespace TimeGame
                                 state = GameState.Lost;
                             }
                         }
-                    }
-
-                    score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-                }
-
-
-
-            if (enemies.Count < difficulty)
-            {
-                Random r = new Random();
-                int outerBounds = GAME_WIDTH + 60;
-                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                while (enemies.Count < difficulty)
-                {
-                    deadEnemies[0].Position = pos;
-                    deadEnemies[0].Alive = true;
-                    enemies.Add(deadEnemies[0]);
-                    deadEnemies.RemoveAt(0);
-                }
-            }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
-            {
-                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
-                if (player.Up) player.Up = false;
-                else player.Up = true;
-            }
-
-
-            // TODO: Add your update logic here
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].Alive)
-                {
-                    enemies[i].Update(gameTime);
-                    if (enemies[i].Bounds.CollidesWith(player.Bounds))
-                    {
-
-                            enemies[i].Position = new Vector2(-10, -10);
-                            enemies[i].Alive = false;
-
-                        deadEnemies.Add(enemies[i]);
-                        enemies.Remove(enemies[i]);
-                        lives--;
-                        i--;
-                        if (lives > 0)
+                        if (i < 0) i = 0;
+                        bool dead = false;
+                        for (int j = 0; j < bullets.Count; j++)
                         {
-                            //state = GameState.Pause;
-                        }
-                        else
-                        {
-                            state = GameState.Lost;
-                        }
-                    }
-                    for (int j = 0; j < bullets.Count; j++)
-                    {
-                        bullets[j].Update(gameTime);
-                        if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
-                        {
-                            bullets[j].hitCount -= 1;
-                            if(bullets[j].hitCount <= 0) 
+                            bullets[j].Update(gameTime);
+                            if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
                             {
-                                bullets[j].Position = new Vector2(-10, -10);
-                                shotBullets.Add(bullets[j]);
-                                bullets.RemoveAt(0);
-                                j--;
+                                bullets[j].hitCount -= 1;
+                                if (bullets[j].hitCount <= 0)
+                                {
+                                    bullets[j].Position = new Vector2(-10, -10);
+                                    shotBullets.Add(bullets[j]);
+                                    bullets.RemoveAt(0);
+                                    j--;
+                                }
+                                dead = true;
+                                
                             }
+                        }
+                        if (dead)
+                        {
                             enemies[i].Position = new Vector2(-10, -10);
                             enemies[i].Alive = false;
                             deadEnemies.Add(enemies[i]);
                             enemies.RemoveAt(i);
                             i--;
                         }
+
                     }
                 }
+
+
+
+
             }
+
+
+
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+
+            // TODO: Add your update logic here
             
-                            deadEnemies.Add(enemies[i]);
-                            enemies.Remove(enemies[i]);
-                            lives--;
-                            i--;
-                            if (lives > 0)
-                            {
-                                state = GameState.Pause;
-                            }
-                            else
-                            {
-                                state = GameState.Lost;
-                            }
-                        }
-                    }
-                }
-
-                player.Update(gameTime);
-                base.Update(gameTime);
-
-
-            }
             else //game hasn't started or is over
             {
 
             }
+            base.Update(gameTime);
         }
 
         Matrix translation = new Matrix();
@@ -399,6 +347,18 @@ namespace TimeGame
                 b.Direction = dir;
                 b.Rotation = rot;
                 b.Position = player.Arm.Position;
+                if (player.Arm is StartingGun sg)
+                {
+                    b.Position = sg.BarrelEnd;
+                }
+                else if (player.Arm is Shotgun shg)
+                {
+                    b.Position = shg.BarrelEnd;
+                }
+                else if (player.Arm is Sniper sng)
+                {
+                    b.Position = sng.BarrelEnd;
+                }
                 bullets.Add(b);
                 shotBullets.RemoveAt(0);
             }
