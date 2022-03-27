@@ -14,6 +14,7 @@ namespace TimeGame
         Unstarted, //useful for a title screen
         InPlay,
         Pause, //used for the menu/pause screen
+        Menu,
         Lost
     }
 
@@ -43,6 +44,11 @@ namespace TimeGame
 
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
+
+        public void Unpause()
+        {
+            state = GameState.InPlay;
+        }
 
         public TimeGame()
         {
