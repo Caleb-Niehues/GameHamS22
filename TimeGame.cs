@@ -59,7 +59,7 @@ namespace TimeGame
         /// <summary>
         /// The width of the game world
         /// </summary>
-        public static int GAME_WIDTH = 64* 12;
+        public static int GAME_WIDTH = 64 * 12;
 
         /// <summary>
         /// The height of the game world
@@ -99,9 +99,9 @@ namespace TimeGame
             bullets = new List<Bullet>();
             shotBullets = new List<Bullet>();
 
-            
+
             Random r = new Random();
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 int outerBounds = GAME_WIDTH + 60;
                 Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
@@ -113,15 +113,15 @@ namespace TimeGame
                     ene.Alive = false;
                     deadEnemies.Add(ene);
                 }
-                
+
             }
-            for(int i = 0; i < 50; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Bullet b = new Bullet();
                 shotBullets.Add(b);
             }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-128, GAME_WIDTH, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH, 0);
             gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
             base.Initialize();
         }
@@ -143,7 +143,7 @@ namespace TimeGame
             {
                 e.LoadContent(this.Content);
             }
-            foreach(Bullet b in shotBullets)
+            foreach (Bullet b in shotBullets)
             {
                 b.LoadContent(Content);
             }
@@ -304,14 +304,11 @@ namespace TimeGame
                         enemies.RemoveAt(i);
                         i--;
                     }
-
                 }
-            
-
                 score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 player.Update(gameTime);
                 base.Update(gameTime);
-            }
+            } 
             #endregion
             else //game hasn't started or is over
             {
@@ -343,6 +340,10 @@ namespace TimeGame
                 if (e.Alive)
                     e.Draw(gameTime, _spriteBatch);
             }
+            foreach (Bullet b in bullets)
+            {
+                b.Draw(gameTime, _spriteBatch);
+            }
             switch (state)
             {
                 case GameState.Pause:
@@ -354,20 +355,10 @@ namespace TimeGame
                 case GameState.Unstarted:
                     break;
                 case GameState.InPlay:
-                    //_spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Black);
-                    //_spriteBatch.DrawString(_gameFont, "Lives: " + lives, new Vector2(2, 40), Color.Black);
+                    _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Black);
+                    _spriteBatch.DrawString(_gameFont, "Lives: " + lives, new Vector2(2, 40), Color.Black);
                     break;
                 default:
-                    player.Draw(gameTime, _spriteBatch);
-                    foreach (GruntSprite e in enemies)
-                    {
-                        if (e.Alive)
-                        e.Draw(gameTime, _spriteBatch);
-                    }
-                    foreach(Bullet b in bullets)
-                    {
-                        b.Draw(gameTime, _spriteBatch);
-                    }
                     break;
             }
             _spriteBatch.End();
