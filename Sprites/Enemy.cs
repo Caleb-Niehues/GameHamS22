@@ -11,6 +11,7 @@ namespace TimeGame.Sprites
     public abstract class Enemy : Sprite
     {
         protected short animationFrame;
+        protected double animationTime;
         protected Vector2 direction;
         protected Color Color { get; set; }
 

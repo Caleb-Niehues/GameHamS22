@@ -12,7 +12,7 @@ namespace TimeGame.Sprites
     {
         private PlayerSprite player;
 
-        private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
+        private BoundingCircle bounds;
         public BoundingCircle Bounds => bounds;
 
         public bool Alive = true;
@@ -45,11 +45,14 @@ namespace TimeGame.Sprites
             speed = r.Next(50,125);
             Color = Color.White;
             direction = new Vector2(1, 0);
+            pixelHeight = 64;
+            pixelWidth = 64;
+            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth / 2, Position.Y + pixelHeight / 2), pixelWidth/2);
         }
 
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("64-64-sprite-pack");
+            texture = content.Load<Texture2D>("Grunt");
         }
 
         public override void Update(GameTime gameTime)
@@ -78,17 +81,28 @@ namespace TimeGame.Sprites
             Direction = new Vector2(x, y);
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
-            bounds.Center.X = Position.X - 16;
-            bounds.Center.Y = Position.Y - 16;
+            bounds.Center.X = Position.X + pixelWidth / 2;
+            bounds.Center.Y = Position.Y + pixelHeight / 2;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Direction.Y < 0) animationFrame = 0;
-            else animationFrame = 1;
+            //Update animation frame
+            animationTime += gameTime.ElapsedGameTime.TotalSeconds;
+            if (animationTime > .3)
+            {
+                animationFrame++;
+                animationTime = 0;
+            }
+            if (animationFrame > 1)
+            {
+                animationFrame = 0;
+            }
+            //if (Direction.Y < 0) animationFrame = 0;
+            //else animationFrame = 1;
 
             //Draw the sprite
-            var source = new Rectangle(animationFrame * 32, 0, 32, 32);
+            var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
         }
     }
