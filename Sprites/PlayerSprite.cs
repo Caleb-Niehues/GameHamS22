@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using TimeGame.Collisions;
 using TimeGame.Sprites.Items;
+using System.Collections.Generic;
 
 namespace TimeGame.Sprites
 {
@@ -99,7 +100,7 @@ namespace TimeGame.Sprites
             //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
-
+                
                 if (Up)
                 {
                     direction.Y = 1;
@@ -171,5 +172,7 @@ namespace TimeGame.Sprites
             spriteBatch.Draw(texture, Position, source, Color);
             Arm.Draw(gameTime, spriteBatch);
         }
+
+        
     }
 }
