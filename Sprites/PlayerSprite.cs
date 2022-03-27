@@ -40,6 +40,11 @@ namespace TimeGame.Sprites
 
         private int speed = 0;
 
+        public float GetRotation()
+        {
+            return this.Arm.GetRot();
+        }
+
         /// <summary>
         /// 
         /// </summary>

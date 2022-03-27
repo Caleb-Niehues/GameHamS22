@@ -25,7 +25,7 @@ namespace TimeGame
         private GameState state = GameState.InPlay;
         private int lives = 3;
 
-
+        public float bulletRot;
 
         public PlayerSprite player;
 
@@ -132,6 +132,8 @@ namespace TimeGame
             //Gameplay occurs here
             if (state == GameState.InPlay)
             {
+                MouseState currentMouse = Mouse.GetState();
+                bulletRot = player.Arm.GetRot();
                 if (enemies.Count < difficulty)
                 {
                     Random r = new Random();
