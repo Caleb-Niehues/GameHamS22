@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace TimeGame.Sprites
 {
     /// <summary>
-    /// A class representing a ball
+    /// A class representing the player
     /// </summary>
     public class PlayerSprite : Sprite
     {
@@ -21,6 +21,7 @@ namespace TimeGame.Sprites
             this.pixelWidth = 64;
             this.pixelHeight = 128;
             Arm = new StartingGun(Position, new Vector2(32, 39));
+            bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 32, pixelHeight - 32);
         }
 
         private MouseState mouseState;
@@ -60,12 +61,12 @@ namespace TimeGame.Sprites
         /// </summary>
         public double Distance => Math.Sqrt(Math.Pow(speed * direction.X, 2) + Math.Pow(speed * direction.Y, 2));
 
-        private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
+        private BoundingRectangle bounds;
 
         /// <summary>
         /// 
         /// </summary>
-        public BoundingCircle Bounds => bounds;
+        public BoundingRectangle Bounds => bounds;
 
         /// <summary>
         /// 
@@ -120,8 +121,8 @@ namespace TimeGame.Sprites
             }
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
-            bounds.Center.X = Position.X - 16;
-            bounds.Center.Y = Position.Y - 16;
+            bounds.X = Position.X - 16;
+            bounds.Y = Position.Y - 32;
 
 
             if (Arm is StartingGun sg)
