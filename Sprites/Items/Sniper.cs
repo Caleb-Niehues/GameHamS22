@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace TimeGame.Sprites.Items
 {
-    public class Shotgun : Item
+    public class Sniper : Item
     {
         public Vector2 BodyOrigin;
         public Vector2 BodyPosition;
@@ -18,7 +18,7 @@ namespace TimeGame.Sprites.Items
         //private Texture2D texture2;
 
         public short ArmPowerUp;
-        public Shotgun(Vector2 position, Vector2 origin)
+        public Sniper(Vector2 position, Vector2 origin)
         {
             BodyOrigin = origin;
             BodyPosition = position;
@@ -29,11 +29,11 @@ namespace TimeGame.Sprites.Items
 
         public void CalculateBarrel()
         {
-            this.BarrelEnd = this.Position + new Vector2(0, -this.pixelHeight / 4) + new Vector2((pixelWidth - this.pixelHeight / 2) * (float)Math.Cos(rotationdir), (pixelWidth - this.pixelHeight / 2) * (float)Math.Sin(rotationdir));
+            this.BarrelEnd = this.Position + new Vector2((pixelWidth - this.pixelHeight / 2) * (float)Math.Cos(rotationdir), (pixelWidth - this.pixelHeight / 2) * (float)Math.Sin(rotationdir));
         }
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("ArmShotgun");
+            texture = content.Load<Texture2D>("ArmSniper");
             //texture2 = content.Load<Texture2D>("PIXEL");
         }
 
