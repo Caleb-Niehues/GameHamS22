@@ -175,12 +175,13 @@ namespace TimeGame
             {
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 MouseState currentMouse = Mouse.GetState();
-                bulletRot = player.Arm.GetRot();
-                bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
+
                 //if (enemies.Count < difficulty)
                     //hasBeenHit = false;
                 if(gunTimer > shootTime)
                 {
+                    bulletRot = player.Arm.GetRot();
+                    bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
                     ShootGun(bulletRot, bulletDir);
                     gunTimer = 0;
                 }

@@ -12,13 +12,12 @@ namespace TimeGame.Sprites.Items
         protected Vector2 velocity;
         protected Vector2 acceleration;
         float accelerationTimer;
-        protected float rotation = 0;
         protected float rotationdir = 0;
         protected float rotationspeed = 0;
 
         public float GetRot()
         {
-            return rotation;
+            return rotationdir;
         }
     }
 }
