@@ -32,6 +32,8 @@ namespace TimeGame
         public float bulletRot;
         public Vector2 bulletDir;
 
+        
+
         public PlayerSprite player;
         public Tilemap _tilemap;
 
@@ -46,7 +48,8 @@ namespace TimeGame
 
         public int difficulty = 2;
 
-
+        public List<Bullet> bullets;
+        public List<Bullet> shotBullets;
 
         /// <summary>
         /// The width of the game world
@@ -85,6 +88,10 @@ namespace TimeGame
 
             enemies = new List<GruntSprite>();
             deadEnemies = new List<GruntSprite>();
+
+            bullets = new List<Bullet>();
+            shotBullets = new List<Bullet>();
+
             
             Random r = new Random();
             for(int i = 0; i < 10; i++)
@@ -100,6 +107,11 @@ namespace TimeGame
                     deadEnemies.Add(ene);
                 }
                 
+            }
+            for(int i = 0; i < 50; i++)
+            {
+                Bullet b = new Bullet();
+                shotBullets.Add(b);
             }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-128, GAME_WIDTH, 0);
@@ -120,6 +132,10 @@ namespace TimeGame
             foreach (GruntSprite e in deadEnemies)
             {
                 e.LoadContent(this.Content);
+            }
+            foreach(Bullet b in shotBullets)
+            {
+                b.LoadContent(Content);
             }
             // TODO: use this.Content to load your game content here
         }
@@ -162,7 +178,8 @@ namespace TimeGame
                     //hasBeenHit = false;
                 if(gunTimer > shootTime)
                 {
-                    
+                    ShootGun(bulletRot, bulletDir);
+                    gunTimer = 0;
                 }
                 if (enemies.Count < difficulty)
                 {
@@ -213,9 +230,7 @@ namespace TimeGame
                                 state = GameState.Lost;
                             }
                         }
-                    }
-
-                    
+                    } 
                 }
             }
             else //game hasn't started or is over
@@ -228,7 +243,7 @@ namespace TimeGame
                 Random r = new Random();
                 int outerBounds = GAME_WIDTH + 60;
                 Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                while (enemies.Count - difficulty < 0)
+                while (enemies.Count < difficulty)
                 {
                     deadEnemies[0].Position = pos;
                     deadEnemies[0].Alive = true;
@@ -244,6 +259,7 @@ namespace TimeGame
                 if (player.Up) player.Up = false;
                 else player.Up = true;
             }
+
 
             // TODO: Add your update logic here
             for (int i = 0; i < enemies.Count; i++)
@@ -270,12 +286,32 @@ namespace TimeGame
                             state = GameState.Lost;
                         }
                     }
+                    for (int j = 0; j < bullets.Count; j++)
+                    {
+                        bullets[j].Update(gameTime);
+                        if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
+                        {
+                            bullets[j].hitCount -= 1;
+                            if(bullets[j].hitCount <= 0) 
+                            {
+                                bullets[j].Position = new Vector2(-10, -10);
+                                shotBullets.Add(bullets[j]);
+                                bullets.RemoveAt(0);
+                                j--;
+                            }
+                            enemies[i].Position = new Vector2(-10, -10);
+                            enemies[i].Alive = false;
+                            deadEnemies.Add(enemies[i]);
+                            enemies.RemoveAt(i);
+                            i--;
+                        }
+                    }
                 }
             }
+            
 
 
 
-                    player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -315,12 +351,29 @@ namespace TimeGame
                         if (e.Alive)
                         e.Draw(gameTime, _spriteBatch);
                     }
+                    foreach(Bullet b in bullets)
+                    {
+                        b.Draw(gameTime, _spriteBatch);
+                    }
                     break;
             }
             _spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void ShootGun(float rot, Vector2 dir)
+        {
+            if (shotBullets.Count > 0)
+            {
+                Bullet b = shotBullets[0];
+                b.Direction = dir;
+                b.Rotation = rot;
+                b.Position = player.Arm.Position;
+                bullets.Add(b);
+                shotBullets.RemoveAt(0);
+            }
         }
     }
 }
