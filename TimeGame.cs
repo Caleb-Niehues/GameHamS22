@@ -28,7 +28,7 @@ namespace TimeGame
         private SpriteFont _gameFont;
 
 
-        private List<SoundEffect> _soundEffects;
+        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
