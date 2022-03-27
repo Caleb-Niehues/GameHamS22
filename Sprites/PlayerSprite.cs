@@ -141,6 +141,7 @@ namespace TimeGame.Sprites
             }
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
+            Position.Y = Math.Clamp(Position.Y, 0, 448);
             bounds.X = Position.X - 16;
             bounds.Y = Position.Y - 32;
 
