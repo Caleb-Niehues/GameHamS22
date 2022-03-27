@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TimeGame.Sprites;
 using TimeGame.Collisions;
 using System;
-
+using TimeGame.Screens;
 
 namespace TimeGame
 {
@@ -109,6 +109,7 @@ namespace TimeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
             _tilemap.LoadContent(this.Content);
+            Pause.LoadContent(this.Content);
 
             foreach (EnemySprite e in enemies)
             {
@@ -296,7 +297,7 @@ namespace TimeGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             translationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (translationTimer > .1)
+            if (translationTimer > .1 && state == GameState.InPlay)
             {
                 translation = Matrix.CreateTranslation(translation.Translation.X - 1, 0, 0);
                 if (translation.Translation.X <= -64)
@@ -313,6 +314,7 @@ namespace TimeGame
             switch (state)
             {
                 case GameState.Lost:
+                    Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Pause:
                     break;
