@@ -10,16 +10,13 @@ namespace TimeGame.Sprites
 {
     public class ChargerSprite : Enemy
     {
-        private short animationFrame;
 
         public Vector2 Direction
         {
             get => direction;
             set => direction = value;
         }
-        private Vector2 direction = new Vector2(1, 1);
-
-        public Color Color { get; set; } = Color.White;
+               
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
 
@@ -30,10 +27,17 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
-        private Texture2D chargeText;
+        public ChargerSprite()
+        {
+            direction = new Vector2(1, 1);
+            pixelWidth = 128;
+            pixelHeight = 96;
+            Color = Color.White;
+        } 
+
         public override void LoadContent(ContentManager content)
         {
-            chargeText = content.Load<Texture2D>("64-64-sprite-pack");
+            texture = content.Load<Texture2D>("Pinky");
         }
 
         public override void Update(GameTime gameTime)
@@ -48,8 +52,8 @@ namespace TimeGame.Sprites
 
 
             //Draw the sprite
-            var source = new Rectangle(animationFrame * 32, 0, 32, 32);
-            spriteBatch.Draw(chargeText, Position, source, Color);
+            var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
+            spriteBatch.Draw(texture, Position, source, Color);
         }
     }
 }
