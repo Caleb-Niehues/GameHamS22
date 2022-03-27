@@ -10,19 +10,7 @@ namespace TimeGame.Sprites
 {
     public class GruntSprite : Enemy
     {
-
-        public GruntSprite(Vector2 position, PlayerSprite p)
-        {
-            Position = position;
-            player = p;
-            Random r = new Random(); 
-            speed = r.Next(50,125);
-        }
-
-        public Texture2D enemyText;
-
         private PlayerSprite player;
-        
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
         public BoundingCircle Bounds => bounds;
@@ -39,11 +27,7 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
-        private short animationFrame;
 
-        public Color Color { get; set; } = Color.White;
-
-        private Vector2 direction = new Vector2(1, 0);
 
         /// <summary>
         /// 
@@ -53,10 +37,19 @@ namespace TimeGame.Sprites
             get => direction;
             set => direction = value;
         }
+        public GruntSprite(Vector2 position, PlayerSprite p)
+        {
+            Position = position;
+            player = p;
+            Random r = new Random(); 
+            speed = r.Next(50,125);
+            Color = Color.White;
+            direction = new Vector2(1, 0);
+        }
 
         public override void LoadContent(ContentManager content)
         {
-            enemyText = content.Load<Texture2D>("64-64-sprite-pack");
+            texture = content.Load<Texture2D>("64-64-sprite-pack");
         }
 
         public override void Update(GameTime gameTime)
@@ -96,7 +89,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * 32, 0, 32, 32);
-            spriteBatch.Draw(enemyText, Position, source, Color);
+            spriteBatch.Draw(texture, Position, source, Color);
         }
     }
 }
