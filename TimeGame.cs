@@ -30,6 +30,7 @@ namespace TimeGame
         private KeyboardState previousKeyboard;
 
         public float bulletRot;
+        public Vector2 bulletDir;
 
         public PlayerSprite player;
         public Tilemap _tilemap;
@@ -154,15 +155,16 @@ namespace TimeGame
             {
                 MouseState currentMouse = Mouse.GetState();
                 bulletRot = player.Arm.GetRot();
+                bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
+                //if (enemies.Count < difficulty)
+                    //hasBeenHit = false;
                 if (enemies.Count < difficulty)
-                    hasBeenHit = false;
-                if (enemies.Count < 5)
                 {
                     Random r = new Random();
                     int outerBounds = GAME_WIDTH + 60;
                     Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
 
-                    while (enemies.Count - difficulty < 0)
+                    while (enemies.Count < difficulty)
                     {
                         deadEnemies[0].Position = pos;
                         deadEnemies[0].Alive = true;
