@@ -1,1 +1,22 @@
-﻿
+﻿[
+  {
+    "Initials": "SecretCaleb",
+    "TimeLived": 3600
+  },
+  {
+    "Initials": "Alex",
+    "TimeLived": 1800
+  },
+  {
+    "Initials": "CalebAlpha",
+    "TimeLived": 200
+  },
+  {
+    "Initials": "Cole",
+    "TimeLived": 100
+  },
+  {
+    "Initials": "CalebPrime",
+    "TimeLived": 50
+  }
+]

@@ -7,6 +7,7 @@ using TimeGame.Collisions;
 using System;
 using TimeGame.Screens;
 using TimeGame.Sprites.Items;
+using TimeGame.Scoring;
 
 namespace TimeGame
 {
@@ -72,6 +73,8 @@ namespace TimeGame
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
 
+        public Leaderboard Leaderboard;
+
 
         Matrix translation = new Matrix();
         double translationTimer;
@@ -103,6 +106,10 @@ namespace TimeGame
 
             bullets = new List<Bullet>();
             shotBullets = new List<Bullet>();
+
+            Leaderboard = new Leaderboard();
+
+            Leaderboard.Load();
 
             Random r = new Random();
             for (int i = 0; i < 10; i++)
@@ -175,9 +182,10 @@ namespace TimeGame
                 }
             }
 
-            if (lives < 1)
+            if (lives < 1 && state != GameState.Lost)
             {
                 state = GameState.Lost;
+                UpdateLeaderboard("YOU", score);
             }
             else if (state == GameState.Pause) //logic for upgrades go here
             {
@@ -338,6 +346,12 @@ namespace TimeGame
             }
         }
 
+        private void UpdateLeaderboard(string name, int time)
+        {
+            Leaderboard.AddEntry(name, time);
+            Leaderboard.Save();
+        }
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -372,7 +386,7 @@ namespace TimeGame
                     Pause.Draw(_spriteBatch, score, upgrades);
                     break;
                 case GameState.Lost:
-                    Lost.Draw(_spriteBatch);
+                    Lost.Draw(_spriteBatch, Leaderboard);
                     break;
                 case GameState.Unstarted:
                     break;
