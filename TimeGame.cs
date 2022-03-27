@@ -91,7 +91,7 @@ namespace TimeGame
             //holding onto incase we want to use a controller
             //GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
 
-            if (keyboardState != previousKeyboard && Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (keyboardState != previousKeyboard && Keyboard.GetState().IsKeyDown(Keys.Escape) && state != GameState.Menu)
             {
                 lives--;
                 if (lives > 0)
@@ -104,9 +104,10 @@ namespace TimeGame
                     Exit();
                 }
             }
+
             if (state == GameState.Pause) //logic for upgrades go here
             {
-
+                
             }
             else if (state == GameState.InPlay) //Gameplay occurs here
             {
