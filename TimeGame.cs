@@ -157,6 +157,7 @@ namespace TimeGame
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Pistol"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Shotgun"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Sniper"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Upgrade"));
 
             foreach (GruntSprite e in enemies)
             {
@@ -207,6 +208,7 @@ namespace TimeGame
                     {
                         score -= upgrades[0] * costModifier;
                         upgrades[0]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
@@ -215,6 +217,7 @@ namespace TimeGame
                     {
                         score -= upgrades[1] * costModifier;
                         upgrades[1]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
@@ -223,6 +226,7 @@ namespace TimeGame
                     {
                         score -= upgrades[2] * costModifier;
                         upgrades[2]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
@@ -231,6 +235,7 @@ namespace TimeGame
                     {
                         score -= upgrades[3] * costModifier;
                         upgrades[3]++;
+                        _soundEffects[3].Play();
                     }
                 }
             }
