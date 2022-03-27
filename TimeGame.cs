@@ -306,7 +306,7 @@ namespace TimeGame
                     }
 
                 }
-            }
+            
 
                 score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 player.Update(gameTime);
