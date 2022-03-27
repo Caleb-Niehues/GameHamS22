@@ -29,8 +29,17 @@ namespace TimeGame
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
+
+
         public PlayerSprite player;
         public List<EnemySprite> enemies;
+
+        public List<EnemySprite> deadEnemies;
+
+
+        public int difficulty = 4;
+
+
 
         public EnemySprite[] enemies2 = new EnemySprite[10];
 
@@ -53,11 +62,6 @@ namespace TimeGame
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
 
-        public void Unpause()
-        {
-            state = GameState.InPlay;
-        }
-
         public TimeGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -68,6 +72,8 @@ namespace TimeGame
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
 
+            
+
             Window.Title = "The Great Work";
         }
 
@@ -75,7 +81,26 @@ namespace TimeGame
         {
             // TODO: Add your initialization logic here
             player = new PlayerSprite();
+            
+            
             enemies = new List<EnemySprite>();
+            deadEnemies = new List<EnemySprite>();
+            
+            Random r = new Random();
+            for(int i = 0; i < 10; i++)
+            {
+                int outerBounds = GAME_WIDTH + 60;
+                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                EnemySprite ene = new EnemySprite(pos, player);
+                if (i < difficulty)
+                    enemies.Add(ene);
+                else
+                {
+                    ene.Alive = false;
+                    deadEnemies.Add(ene);
+                }
+                
+            }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-64, GAME_WIDTH, 0);
             base.Initialize();
@@ -85,7 +110,12 @@ namespace TimeGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
+            
             foreach (EnemySprite e in enemies)
+            {
+                e.LoadContent(this.Content);
+            }
+            foreach (EnemySprite e in deadEnemies)
             {
                 e.LoadContent(this.Content);
             }
@@ -122,15 +152,24 @@ namespace TimeGame
             }
             else if (state == GameState.InPlay) //Gameplay occurs here
             {
+                if (enemies.Count < difficulty)
                 hasBeenHit = false;
                 if (enemies.Count < 5)
                 {
                     Random r = new Random();
                     int outerBounds = GAME_WIDTH + 60;
                     Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                    EnemySprite enemy = new EnemySprite(pos, player);
-                    enemy.LoadContent(this.Content);
-                    enemies.Add(enemy);
+                    
+                    while(enemies.Count - difficulty < 0)
+                    {
+                        deadEnemies[0].Position = pos;
+                        deadEnemies[0].Alive = true;
+                        enemies.Add(deadEnemies[0]);
+                        deadEnemies.RemoveAt(0);
+                    }
+                    
+                    
+                    
                 }
                 if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
                 {
@@ -139,6 +178,33 @@ namespace TimeGame
                     else player.Up = true;
                 }
                 player.Update(gameTime);
+
+                for(int i = 0; i < enemies.Count; i++)
+                {
+                    if (enemies[i].Alive)
+                    {
+                        enemies[i].Update(gameTime);
+                        if (enemies[i].Bounds.CollidesWith(player.Bounds))
+                        {
+
+                            enemies[i].Position = new Vector2(-10, -10);
+                            enemies[i].Alive = false;
+                            
+                            deadEnemies.Add(enemies[i]);
+                            enemies.Remove(enemies[i]);
+                            lives--;
+                            i--;
+                            if (lives > 0)
+                            {
+                                //state = GameState.Pause;
+                            }
+                            else
+                            {
+                                state = GameState.Lost;
+                            }
+                        }
+                    }
+                    
                 foreach (EnemySprite e in enemies)
                 {
                     e.Update(gameTime);
@@ -192,8 +258,12 @@ namespace TimeGame
                     enemies.Remove(e);
                     
                 }
+                
+                
+
             }
 
+            
             
             player.Update(gameTime);
             base.Update(gameTime);
@@ -215,6 +285,7 @@ namespace TimeGame
                     player.Draw(gameTime, _spriteBatch);
                     foreach (EnemySprite e in enemies)
                     {
+                        if (e.Alive)
                         e.Draw(gameTime, _spriteBatch);
                     }
                     break;

@@ -22,9 +22,12 @@ namespace TimeGame.Sprites
         public Texture2D enemyText;
 
         private PlayerSprite player;
+        
 
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
         public BoundingCircle Bounds => bounds;
+
+        public bool Alive = true;
 
         private double waitTimerX = 0;
         private double waitTimerY = 0;
