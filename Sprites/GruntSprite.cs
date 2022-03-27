@@ -8,10 +8,10 @@ using System.Text;
 
 namespace TimeGame.Sprites
 {
-    public class EnemySprite : Sprite
+    public class GruntSprite : Enemy
     {
 
-        public EnemySprite(Vector2 position, PlayerSprite p)
+        public GruntSprite(Vector2 position, PlayerSprite p)
         {
             Position = position;
             player = p;

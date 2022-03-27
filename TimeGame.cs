@@ -34,11 +34,11 @@ namespace TimeGame
         public PlayerSprite player;
         public Tilemap _tilemap;
 
-        public List<EnemySprite> enemies2;
+        public List<GruntSprite> enemies2;
 
-        public List<EnemySprite> enemies;
+        public List<GruntSprite> enemies;
 
-        public List<EnemySprite> deadEnemies;
+        public List<GruntSprite> deadEnemies;
 
 
 
@@ -81,15 +81,15 @@ namespace TimeGame
             _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
 
 
-            enemies = new List<EnemySprite>();
-            deadEnemies = new List<EnemySprite>();
+            enemies = new List<GruntSprite>();
+            deadEnemies = new List<GruntSprite>();
             
             Random r = new Random();
             for(int i = 0; i < 10; i++)
             {
                 int outerBounds = GAME_WIDTH + 60;
                 Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                EnemySprite ene = new EnemySprite(pos, player);
+                GruntSprite ene = new GruntSprite(pos, player);
                 if (i < difficulty)
                     enemies.Add(ene);
                 else
@@ -111,11 +111,11 @@ namespace TimeGame
             _tilemap.LoadContent(this.Content);
             Pause.LoadContent(this.Content);
 
-            foreach (EnemySprite e in enemies)
+            foreach (GruntSprite e in enemies)
             {
                 e.LoadContent(this.Content);
             }
-            foreach (EnemySprite e in deadEnemies)
+            foreach (GruntSprite e in deadEnemies)
             {
                 e.LoadContent(this.Content);
             }
@@ -302,7 +302,7 @@ namespace TimeGame
                     break;
                 default:
                     player.Draw(gameTime, _spriteBatch);
-                    foreach (EnemySprite e in enemies)
+                    foreach (GruntSprite e in enemies)
                     {
                         if (e.Alive)
                         e.Draw(gameTime, _spriteBatch);

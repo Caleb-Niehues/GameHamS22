@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TimeGame.Sprites
 {
-    public class ChargerSprite : Sprite
+    public class ChargerSprite : Enemy
     {
         private short animationFrame;
 
