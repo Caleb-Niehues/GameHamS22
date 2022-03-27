@@ -27,7 +27,9 @@ namespace TimeGame
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
+        private int scoreBucket;
         private int score;
+        private int costModifier = 25;
         private int[] upgrades = { 1, 1, 1, 1 };
         private bool hasBeenHit = false;
         MouseState currentMouse;
@@ -93,17 +95,14 @@ namespace TimeGame
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             player = new PlayerSprite();
             _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
-
 
             enemies = new List<GruntSprite>();
             deadEnemies = new List<GruntSprite>();
 
             bullets = new List<Bullet>();
             shotBullets = new List<Bullet>();
-
 
             Random r = new Random();
             for (int i = 0; i < 10; i++)
@@ -152,15 +151,12 @@ namespace TimeGame
             {
                 b.LoadContent(Content);
             }
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
             previousKeyboard = keyboardState;
             keyboardState = Keyboard.GetState();
-            //holding onto incase we want to use a controller
-            //GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
 
             if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Escape))
             {
@@ -187,33 +183,33 @@ namespace TimeGame
             {
                 if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Q))
                 {
-                    if (score > upgrades[0] * 1000)
+                    if (score > upgrades[0] * costModifier)
                     {
-                        score -= upgrades[0] * 1000;
+                        score -= upgrades[0] * costModifier;
                         upgrades[0]++;
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (score > upgrades[1] * 1000)
+                    if (score > upgrades[1] * costModifier)
                     {
-                        score -= upgrades[1] * 1000;
+                        score -= upgrades[1] * costModifier;
                         upgrades[1]++;
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
                 {
-                    if (score > upgrades[2] * 1000)
+                    if (score > upgrades[2] * costModifier)
                     {
-                        score -= upgrades[2] * 1000;
+                        score -= upgrades[2] * costModifier;
                         upgrades[2]++;
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
                 {
-                    if (score > upgrades[3] * 1000)
+                    if (score > upgrades[3] * costModifier)
                     {
-                        score -= upgrades[3] * 1000;
+                        score -= upgrades[3] * costModifier;
                         upgrades[3]++;
                     }
                 }
@@ -327,7 +323,12 @@ namespace TimeGame
                         i--;
                     }
                 }
-                score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                scoreBucket += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (scoreBucket > 1000)
+                {
+                    score += scoreBucket / 1000;
+                    scoreBucket -= score * 1000;
+                }
                 base.Update(gameTime);
             } 
             #endregion
