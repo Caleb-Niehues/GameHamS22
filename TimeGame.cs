@@ -111,6 +111,7 @@ namespace TimeGame
             _tilemap.LoadContent(this.Content);
             _gameFont = this.Content.Load<SpriteFont>("Bangers");
             Pause.LoadContent(this.Content);
+            Lose.LoadContent(this.Content);
 
             foreach (GruntSprite e in enemies)
             {
@@ -176,9 +177,6 @@ namespace TimeGame
                         enemies.Add(deadEnemies[0]);
                         deadEnemies.RemoveAt(0);
                     }
-
-
-
                 }
                 if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
                 {
@@ -214,7 +212,7 @@ namespace TimeGame
                         }
                     }
 
-                    score += (int)gameTime.ElapsedGameTime.TotalSeconds;
+                    score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
             }
             else //game hasn't started or is over
@@ -235,8 +233,6 @@ namespace TimeGame
                     deadEnemies.RemoveAt(0);
                 }
             }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
             if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
             {
                 player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
@@ -262,7 +258,7 @@ namespace TimeGame
                         i--;
                         if (lives > 0)
                         {
-                            //state = GameState.Pause;
+                            state = GameState.Pause;
                         }
                         else
                         {
@@ -298,11 +294,11 @@ namespace TimeGame
             _spriteBatch.Begin();
             switch (state)
             {
-                case GameState.Lost:
-                    Pause.Draw(_spriteBatch);
-                    break;
                 case GameState.Pause:
                     Pause.Draw(_spriteBatch);
+                    break;
+                case GameState.Lost:
+                    Lose.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
                     break;

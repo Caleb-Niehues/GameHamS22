@@ -68,7 +68,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * 32, 0, 32, 32);
-            spriteBatch.Draw(bulletText, Position, source, Color);
+            //spriteBatch.Draw(bulletText, Position, source, Color);
         }
     }
 }
