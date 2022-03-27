@@ -340,6 +340,10 @@ namespace TimeGame
                 if (e.Alive)
                     e.Draw(gameTime, _spriteBatch);
             }
+            foreach (Bullet b in bullets)
+            {
+                b.Draw(gameTime, _spriteBatch);
+            }
             switch (state)
             {
                 case GameState.Pause:
@@ -355,16 +359,6 @@ namespace TimeGame
                     _spriteBatch.DrawString(_gameFont, "Lives: " + lives, new Vector2(2, 40), Color.Black);
                     break;
                 default:
-                    player.Draw(gameTime, _spriteBatch);
-                    foreach (GruntSprite e in enemies)
-                    {
-                        if (e.Alive)
-                        e.Draw(gameTime, _spriteBatch);
-                    }
-                    foreach(Bullet b in bullets)
-                    {
-                        b.Draw(gameTime, _spriteBatch);
-                    }
                     break;
             }
             _spriteBatch.End();
