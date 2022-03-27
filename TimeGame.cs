@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System.Collections.Generic;
 using TimeGame.Sprites;
 using TimeGame.Collisions;
@@ -25,6 +26,9 @@ namespace TimeGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _gameFont;
+
+
+        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
@@ -150,6 +154,11 @@ namespace TimeGame
             Pause.LoadContent(this.Content);
             Lost.LoadContent(this.Content);
 
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Pistol"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Shotgun"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Sniper"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Upgrade"));
+
             foreach (GruntSprite e in enemies)
             {
                 e.LoadContent(this.Content);
@@ -199,6 +208,7 @@ namespace TimeGame
                     {
                         score -= upgrades[0] * costModifier;
                         upgrades[0]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
@@ -207,6 +217,7 @@ namespace TimeGame
                     {
                         score -= upgrades[1] * costModifier;
                         upgrades[1]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
@@ -215,6 +226,7 @@ namespace TimeGame
                     {
                         score -= upgrades[2] * costModifier;
                         upgrades[2]++;
+                        _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
@@ -223,6 +235,7 @@ namespace TimeGame
                     {
                         score -= upgrades[3] * costModifier;
                         upgrades[3]++;
+                        _soundEffects[3].Play();
                     }
                 }
             }
@@ -236,6 +249,11 @@ namespace TimeGame
 
                 //if (enemies.Count < difficulty)
                 //hasBeenHit = false;
+
+                // 0 = Pistol
+                // 1 = Shotgun
+                // 2 = Sniper
+
                 if (gunTimer > shootTime)
                 {
                     bulletRot = player.Arms[player.armIndex].GetRot();
@@ -257,6 +275,8 @@ namespace TimeGame
                             ShootGun(bulletRot, bulletDir);
                         }
                     else ShootGun(bulletRot, bulletDir);
+                    _soundEffects[player.armIndex].Play();
+                    // Call gun sound here
                     gunTimer = 0;
                 }
                 if (enemies.Count < difficulty)
