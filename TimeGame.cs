@@ -27,8 +27,10 @@ namespace TimeGame
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
-        private bool hasBeenHit = false;
         private int score;
+        private int[] upgrades = { 1, 1, 1, 1 };
+        private bool hasBeenHit = false;
+        MouseState currentMouse;
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
@@ -66,6 +68,10 @@ namespace TimeGame
 
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
+
+
+        Matrix translation = new Matrix();
+        double translationTimer;
 
         public TimeGame()
         {
@@ -127,7 +133,7 @@ namespace TimeGame
             _tilemap.LoadContent(this.Content);
             _gameFont = this.Content.Load<SpriteFont>("Bangers");
             Pause.LoadContent(this.Content);
-            Lose.LoadContent(this.Content);
+            Lost.LoadContent(this.Content);
 
             foreach (GruntSprite e in enemies)
             {
@@ -151,7 +157,7 @@ namespace TimeGame
             //holding onto incase we want to use a controller
             //GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
 
-            if (keyboardState != previousKeyboard && Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Escape))
             {
                 switch (state)
                 {
@@ -168,11 +174,47 @@ namespace TimeGame
                 }
             }
 
-            if (state == GameState.Pause && lives > 0) //logic for upgrades go here
+            if (lives < 1)
             {
-
+                state = GameState.Lost;
             }
-            else if (state == GameState.InPlay) //Gameplay occurs here
+            else if (state == GameState.Pause) //logic for upgrades go here
+            {
+                if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Q))
+                {
+                    if (score > upgrades[0] * 1000)
+                    {
+                        score -= upgrades[0] * 1000;
+                        upgrades[0]++;
+                    }
+                }
+                else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
+                {
+                    if (score > upgrades[1] * 1000)
+                    {
+                        score -= upgrades[1] * 1000;
+                        upgrades[1]++;
+                    }
+                }
+                else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
+                {
+                    if (score > upgrades[2] * 1000)
+                    {
+                        score -= upgrades[2] * 1000;
+                        upgrades[2]++;
+                    }
+                }
+                else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
+                {
+                    if (score > upgrades[3] * 1000)
+                    {
+                        score -= upgrades[3] * 1000;
+                        upgrades[3]++;
+                    }
+                }
+            }
+            #region Gameplay
+            else if (state == GameState.InPlay)
             {
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 MouseState currentMouse = Mouse.GetState();
@@ -223,14 +265,6 @@ namespace TimeGame
                             enemies.Remove(enemies[i]);
                             lives--;
                             i--;
-                            if (lives > 0)
-                            {
-                                //state = GameState.Pause;
-                            }
-                            else
-                            {
-                                state = GameState.Lost;
-                            }
                         }
                         else if (enemies[i].Bounds.CollidesWith(gameBoundFront))
                         {
@@ -274,29 +308,17 @@ namespace TimeGame
                 }
             }
 
-
-
-
-        
-
-
-
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-
-            // TODO: Add your update logic here
-            
+                score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                player.Update(gameTime);
+                base.Update(gameTime);
+            }
+            #endregion
             else //game hasn't started or is over
             {
 
             }
-            base.Update(gameTime);
         }
 
-        Matrix translation = new Matrix();
-        double translationTimer;
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -315,8 +337,6 @@ namespace TimeGame
             _spriteBatch.End();
 
             _spriteBatch.Begin();
-
-            _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
             player.Draw(gameTime, _spriteBatch);
             foreach (GruntSprite e in enemies)
             {
@@ -326,12 +346,16 @@ namespace TimeGame
             switch (state)
             {
                 case GameState.Pause:
-                    Pause.Draw(_spriteBatch);
+                    Pause.Draw(_spriteBatch, score, upgrades);
                     break;
                 case GameState.Lost:
-                    Lose.Draw(_spriteBatch);
+                    Lost.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
+                    break;
+                case GameState.InPlay:
+                    //_spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Black);
+                    //_spriteBatch.DrawString(_gameFont, "Lives: " + lives, new Vector2(2, 40), Color.Black);
                     break;
                 default:
                     player.Draw(gameTime, _spriteBatch);
