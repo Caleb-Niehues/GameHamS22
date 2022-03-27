@@ -45,6 +45,7 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
+
         public Color Color { get; set; } = Color.Red;
 
 

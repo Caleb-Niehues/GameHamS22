@@ -7,13 +7,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeGame.Sprites.Items
 {
-    public abstract class Item : Sprite
+    public abstract class Arm : Sprite
     {
         protected Vector2 velocity;
         protected Vector2 acceleration;
         float accelerationTimer;
         protected float rotationdir = 0;
         protected float rotationspeed = 0;
+
+        public Vector2 BodyOrigin;
+        public Vector2 BodyPosition;
+        public Vector2 BarrelEnd;
+
+        public short ArmPowerUp;
 
         public float GetRot()
         {

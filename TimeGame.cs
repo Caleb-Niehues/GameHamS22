@@ -37,6 +37,7 @@ namespace TimeGame
         public float bulletRot;
         public Vector2 bulletDir;
 
+
         public BoundingRectangle gameBoundFront;
 
         public PlayerSprite player;
@@ -223,9 +224,25 @@ namespace TimeGame
                 //hasBeenHit = false;
                 if (gunTimer > shootTime)
                 {
-                    bulletRot = player.Arm.GetRot();
+                    bulletRot = player.Arms[player.armIndex].GetRot();
                     bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
-                    ShootGun(bulletRot, bulletDir);
+                    Random r = new Random();
+                    if (player.armIndex == 1)
+                        for (int i = 0; i < 1 + upgrades[2]; i++) 
+                        {
+                            bulletRot = player.Arms[player.armIndex].GetRot();
+                            double d = r.NextDouble() * (double)(Math.PI / 8);
+                            if (i % 2 == 0)
+                            {
+                                d *= -1;
+                            }
+                            bulletRot += (float)d;
+
+                            //bulletDir = ((Shotgun)player.Arms[player.armIndex]).CalculateBarrel(bulletRot);
+                            bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
+                            ShootGun(bulletRot, bulletDir);
+                        }
+                    else ShootGun(bulletRot, bulletDir);
                     gunTimer = 0;
                 }
                 if (enemies.Count < difficulty)
@@ -264,6 +281,7 @@ namespace TimeGame
                             deadEnemies.Add(enemies[i]);
                             enemies.Remove(enemies[i]);
                             lives--;
+                            state = GameState.Pause;
                             i--;
                         }
                         else if (enemies[i].Bounds.CollidesWith(gameBoundFront))
@@ -306,7 +324,6 @@ namespace TimeGame
                     }
                 }
                 score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-                player.Update(gameTime);
                 base.Update(gameTime);
             } 
             #endregion
@@ -374,18 +391,19 @@ namespace TimeGame
                 Bullet b = shotBullets[0];
                 b.Direction = dir;
                 b.Rotation = rot;
-                b.Position = player.Arm.Position;
-                if (player.Arm is StartingGun sg)
+                b.Position = player.Arms[player.armIndex].BarrelEnd;
+                if (player.armIndex == 0)
                 {
-                    b.Position = sg.BarrelEnd;
+                    shootTime = 1 + (1 / upgrades[1]);
                 }
-                else if (player.Arm is Shotgun shg)
+                else if (player.armIndex == 1)
                 {
-                    b.Position = shg.BarrelEnd;
+                    shootTime = 4 - (2/upgrades[2]);
                 }
-                else if (player.Arm is Sniper sng)
+                else if (player.armIndex == 2)
                 {
-                    b.Position = sng.BarrelEnd;
+                    shootTime = 3;
+                    b.hitCount = 1 + upgrades[3];
                 }
                 bullets.Add(b);
                 shotBullets.RemoveAt(0);

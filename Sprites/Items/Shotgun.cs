@@ -9,15 +9,11 @@ using System.Diagnostics;
 
 namespace TimeGame.Sprites.Items
 {
-    public class Shotgun : Item
+    public class Shotgun : Arm
     {
-        public Vector2 BodyOrigin;
-        public Vector2 BodyPosition;
-        public Vector2 BarrelEnd;
-
         //private Texture2D texture2;
 
-        public short ArmPowerUp;
+        
         public Shotgun(Vector2 position, Vector2 origin)
         {
             BodyOrigin = origin;
