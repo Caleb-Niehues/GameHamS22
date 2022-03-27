@@ -128,6 +128,30 @@
 /processorParam:TextureFormat=Color
 /build:Player.png
 
+#begin Sounds/Pistol.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Pistol.mp3
+
+#begin Sounds/Shotgun.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Shotgun.mp3
+
+#begin Sounds/Sniper.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Sniper.mp3
+
+#begin Sounds/Upgrade.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Upgrade.mp3
+
 #begin TileMap.png
 /importer:TextureImporter
 /processor:TextureProcessor
