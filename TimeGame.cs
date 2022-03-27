@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using System.Collections.Generic;
 using TimeGame.Sprites;
 using TimeGame.Collisions;
@@ -25,6 +26,9 @@ namespace TimeGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _gameFont;
+
+
+        private List<SoundEffect> _soundEffects;
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
@@ -150,6 +154,10 @@ namespace TimeGame
             Pause.LoadContent(this.Content);
             Lost.LoadContent(this.Content);
 
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Pistol"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Shotgun"));
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Sniper"));
+
             foreach (GruntSprite e in enemies)
             {
                 e.LoadContent(this.Content);
@@ -236,6 +244,11 @@ namespace TimeGame
 
                 //if (enemies.Count < difficulty)
                 //hasBeenHit = false;
+
+                // 0 = Pistol
+                // 1 = Shotgun
+                // 2 = Sniper
+
                 if (gunTimer > shootTime)
                 {
                     bulletRot = player.Arms[player.armIndex].GetRot();
@@ -257,6 +270,8 @@ namespace TimeGame
                             ShootGun(bulletRot, bulletDir);
                         }
                     else ShootGun(bulletRot, bulletDir);
+                    _soundEffects[player.armIndex].Play();
+                    // Call gun sound here
                     gunTimer = 0;
                 }
                 if (enemies.Count < difficulty)
