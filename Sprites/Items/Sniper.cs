@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace TimeGame.Sprites.Items
 {
-    public class StartingGun : Item
+    public class Sniper : Item
     {
         public Vector2 BodyOrigin;
         public Vector2 BodyPosition;
@@ -18,21 +18,22 @@ namespace TimeGame.Sprites.Items
         //private Texture2D texture2;
 
         public short ArmPowerUp;
-        public StartingGun(Vector2 position, Vector2 origin)
+        public Sniper(Vector2 position, Vector2 origin)
         {
             BodyOrigin = origin;
             BodyPosition = position;
             this.Position = BodyPosition + BodyOrigin;
-            this.pixelWidth = 64;
+            this.pixelWidth = 96;
             this.pixelHeight = 16;
         }
+
         public void CalculateBarrel()
         {
             this.BarrelEnd = this.Position + new Vector2((pixelWidth - this.pixelHeight / 2) * (float)Math.Cos(rotationdir), (pixelWidth - this.pixelHeight / 2) * (float)Math.Sin(rotationdir));
         }
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("ArmPistol");
+            texture = content.Load<Texture2D>("ArmSniper");
             //texture2 = content.Load<Texture2D>("PIXEL");
         }
 
@@ -42,8 +43,9 @@ namespace TimeGame.Sprites.Items
             //https://stackoverflow.com/questions/7339574/xna-rotating-a-sprite-to-face-the-cursor-exactly
             MouseState ms = Mouse.GetState(); ;
             rotationdir = (float)Math.Atan2((ms.Y - Position.Y), (ms.X - Position.X));
-            //Debug.WriteLine(rotationdir);
             CalculateBarrel();
+            //Mouse.SetPosition((int)BarrelEnd.X, (int) BarrelEnd.Y);
+            //Debug.WriteLine(rotationdir);
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {

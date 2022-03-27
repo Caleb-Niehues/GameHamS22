@@ -53,7 +53,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
-            spriteBatch.Draw(texture, Position, source, Color);
+            spriteBatch.Draw(texture, Position, source, Color, 0, new Vector2(0,0), 1, SpriteEffects.FlipHorizontally, 0);
         }
     }
 }
