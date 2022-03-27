@@ -14,6 +14,7 @@ namespace TimeGame
         Unstarted, //useful for a title screen
         InPlay,
         Pause, //used for the menu/pause screen
+        Menu,
         Lost
     }
 
@@ -24,19 +25,27 @@ namespace TimeGame
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
+        private bool hasBeenHit = false;
+        private KeyboardState keyboardState;
+        private KeyboardState previousKeyboard;
 
         public float bulletRot;
 
         public PlayerSprite player;
-
-        public List<EnemySprite> enemies2;
-
         public List<EnemySprite> enemies;
 
         public List<EnemySprite> deadEnemies;
 
 
         public int difficulty = 4;
+
+
+
+        public EnemySprite[] enemies2 = new EnemySprite[10];
+
+        public Queue<EnemySprite> freeEnemies;
+
+        public int difficulty = 2;
 
 
 
@@ -51,7 +60,6 @@ namespace TimeGame
         public static int GAME_HEIGHT = 480;
 
         public BoundingRectangle gameBoundTop;
-
         public BoundingRectangle gameBoundBottom;
 
         public TimeGame()
@@ -94,7 +102,7 @@ namespace TimeGame
                 
             }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 32, GAME_WIDTH, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-64, GAME_WIDTH, 0);
             base.Initialize();
         }
 
@@ -116,25 +124,39 @@ namespace TimeGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            previousKeyboard = keyboardState;
+            keyboardState = Keyboard.GetState();
+            //holding onto incase we want to use a controller
+            //GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+
+            if (keyboardState != previousKeyboard && Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                lives--;
-                if (lives > 0)
+                switch (state)
                 {
-                    state = GameState.Pause;
-                }
-                else
-                {
-                    state = GameState.Lost;
-                    //Exit();
+                    case GameState.Pause:
+                        state = GameState.InPlay;
+                        break;
+                    case GameState.Lost:
+                        Exit();
+                        break;
+                    default:
+                        lives--;
+                        state = GameState.Pause;
+                        break;
                 }
             }
-            //Gameplay occurs here
-            if (state == GameState.InPlay)
+
+            if (state == GameState.Pause && lives > 0) //logic for upgrades go here
+            {
+                
+            }
+            else if (state == GameState.InPlay) //Gameplay occurs here
             {
                 MouseState currentMouse = Mouse.GetState();
                 bulletRot = player.Arm.GetRot();
                 if (enemies.Count < difficulty)
+                hasBeenHit = false;
+                if (enemies.Count < 5)
                 {
                     Random r = new Random();
                     int outerBounds = GAME_WIDTH + 60;
@@ -185,6 +207,58 @@ namespace TimeGame
                         }
                     }
                     
+                foreach (EnemySprite e in enemies)
+                {
+                    e.Update(gameTime);
+                    if (e.Bounds.CollidesWith(player.Bounds))
+                    {
+                        hasBeenHit = true;
+                        //e.Deactivate
+                    }
+                }
+                if (hasBeenHit)
+                {
+                    lives--;
+                    if (lives > 0)
+                    {
+                        state = GameState.Pause;
+                    }
+                    else
+                    {
+                        state = GameState.Lost;
+                    }
+                }
+            }
+            else //game hasn't started or is over
+            {
+            
+            }
+
+            if (enemies.Count < difficulty)
+            {
+                Random r = new Random();
+                int outerBounds = GAME_WIDTH + 60;
+                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                EnemySprite enemy = new EnemySprite(pos, player);
+                enemy.LoadContent(this.Content);
+                enemies.Add(enemy);
+            }
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
+            {
+                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
+                if (player.Up) player.Up = false;
+                else player.Up = true;
+            }
+            // TODO: Add your update logic here
+            foreach (EnemySprite e in enemies)
+            {
+                e.Update(gameTime);
+                if (player.Bounds.CollidesWith(e.Bounds))
+                {
+                    enemies.Remove(e);
+                    
                 }
                 
                 
@@ -192,6 +266,8 @@ namespace TimeGame
             }
 
             
+            
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
