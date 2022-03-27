@@ -41,7 +41,8 @@ namespace TimeGame
 
         public List<GruntSprite> deadEnemies;
 
-
+        public double gunTimer = 0;
+        public double shootTime = 2.0;
 
         public int difficulty = 2;
 
@@ -153,11 +154,16 @@ namespace TimeGame
             }
             else if (state == GameState.InPlay) //Gameplay occurs here
             {
+                gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 MouseState currentMouse = Mouse.GetState();
                 bulletRot = player.Arm.GetRot();
                 bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
                 //if (enemies.Count < difficulty)
                     //hasBeenHit = false;
+                if(gunTimer > shootTime)
+                {
+                    
+                }
                 if (enemies.Count < difficulty)
                 {
                     Random r = new Random();
