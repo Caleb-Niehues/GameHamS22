@@ -22,33 +22,34 @@ namespace TimeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _gameFont;
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
         private bool hasBeenHit = false;
+        private int score;
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
         public PlayerSprite player;
         public List<EnemySprite> enemies;
 
+        public List<EnemySprite> deadEnemies;
+
+        public int difficulty = 2;
+
         /// <summary>
         /// The width of the game world
         /// </summary>
-        public static int GAME_WIDTH = 760;
+        public static int GAME_WIDTH = 64* 12;
 
         /// <summary>
         /// The height of the game world
         /// </summary>
-        public static int GAME_HEIGHT = 480;
+        public static int GAME_HEIGHT = 64 * 8;
 
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
-
-        public void Unpause()
-        {
-            state = GameState.InPlay;
-        }
 
         public TimeGame()
         {
@@ -67,6 +68,8 @@ namespace TimeGame
         {
             // TODO: Add your initialization logic here
             player = new PlayerSprite();
+            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
+
             enemies = new List<EnemySprite>();
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-64, GAME_WIDTH, 0);
@@ -77,6 +80,10 @@ namespace TimeGame
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
+            _tilemap.LoadContent(this.Content);
+            _gameFont = this.Content.Load<SpriteFont>("Bangers");
+            Pause.LoadContent(this.Content);
+
             foreach (EnemySprite e in enemies)
             {
                 e.LoadContent(this.Content);
@@ -136,27 +143,37 @@ namespace TimeGame
                     e.Update(gameTime);
                     if (e.Bounds.CollidesWith(player.Bounds))
                     {
-                        hasBeenHit = true;
-                        //e.Deactivate
+                        enemies[i].Update(gameTime);
+                        if (enemies[i].Bounds.CollidesWith(player.Bounds))
+                        {
+
+                            enemies[i].Position = new Vector2(-10, -10);
+                            enemies[i].Alive = false;
+
+                            deadEnemies.Add(enemies[i]);
+                            enemies.Remove(enemies[i]);
+                            lives--;
+                            i--;
+                            if (lives > 0)
+                            {
+                                //state = GameState.Pause;
+                            }
+                            else
+                            {
+                                state = GameState.Lost;
+                            }
+                        }
                     }
-                }
-                if (hasBeenHit)
-                {
-                    lives--;
-                    if (lives > 0)
-                    {
-                        state = GameState.Pause;
-                    }
-                    else
-                    {
-                        state = GameState.Lost;
-                    }
+
+                    score += (int)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
             else //game hasn't started or is over
             {
             
             }
+
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -169,10 +186,12 @@ namespace TimeGame
                 case GameState.Lost:
                     break;
                 case GameState.Pause:
+                    Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
                     break;
                 default:
+                    _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
                     player.Draw(gameTime, _spriteBatch);
                     foreach (EnemySprite e in enemies)
                     {
