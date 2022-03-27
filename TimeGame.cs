@@ -100,7 +100,7 @@ namespace TimeGame
                 
             }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-64, GAME_WIDTH, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-128, GAME_WIDTH, 0);
             base.Initialize();
         }
 
@@ -207,27 +207,7 @@ namespace TimeGame
                         }
                     }
 
-                    /*foreach (EnemySprite e in enemies)
-                    {
-                        e.Update(gameTime);
-                        if (e.Bounds.CollidesWith(player.Bounds))
-                        {
-                            hasBeenHit = true;
-                            //e.Deactivate
-                        }
-                    }
-                    if (hasBeenHit)
-                    {
-                        lives--;
-                        if (lives > 0)
-                        {
-                            //state = GameState.Pause;
-                        }
-                        else
-                        {
-                            state = GameState.Lost;
-                        }
-                    }*/
+                    
                 }
             }
             else //game hasn't started or is over
