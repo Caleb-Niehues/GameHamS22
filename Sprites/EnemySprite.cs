@@ -16,7 +16,7 @@ namespace TimeGame.Sprites
             Position = position;
             player = p;
             Random r = new Random(); 
-            speed = r.Next(50,200);
+            speed = r.Next(50,125);
         }
 
         public Texture2D enemyText;
@@ -68,16 +68,15 @@ namespace TimeGame.Sprites
 
             if (Position.X > player.Position.X)
                 x = -1;
-            else
-                x = 1;
+            else 
+                y = 0;
 
 
 
-            if (Position.Y > player.Position.Y)
+            if (Position.Y > player.Position.Y && y != 0)
                 y = -1;
-            else
+            else if(y != 0)
                 y = 1;
-            waitTimerY -= 2.0;
 
 
 

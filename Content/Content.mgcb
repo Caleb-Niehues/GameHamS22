@@ -68,10 +68,8 @@
 /processorParam:ColorKeyEnabled=True
 /processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Obstacles.png
+/processorParam:TextureFormat=Compressed
+/build:Bangers.spritefont
 
 #begin Obstacles.png
 /importer:TextureImporter

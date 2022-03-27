@@ -15,5 +15,10 @@ namespace TimeGame.Sprites.Items
         protected float rotation = 0;
         protected float rotationdir = 0;
         protected float rotationspeed = 0;
+
+        public float GetRot()
+        {
+            return rotation;
+        }
     }
 }
