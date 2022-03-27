@@ -19,7 +19,7 @@ namespace TimeGame.Sprites
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
             this.pixelHeight = 128;
-            Arm = new Sniper(Position, new Vector2(32, 39));
+            Arm = new StartingGun(Position, new Vector2(32, 39));
         }
 
         private MouseState mouseState;
@@ -132,6 +132,11 @@ namespace TimeGame.Sprites
             {
                 shg.BodyPosition = Position;
                 shg.ArmPowerUp = powerUp;
+            }
+            else if (Arm is Sniper sng)
+            {
+                sng.BodyPosition = Position;
+                sng.ArmPowerUp = powerUp;
             }
             Arm.Update(gameTime);
         }
