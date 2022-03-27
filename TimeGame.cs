@@ -214,62 +214,66 @@ namespace TimeGame
 
                     score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 }
+
+
+
+                if (enemies.Count < difficulty)
+                {
+                    Random r = new Random();
+                    int outerBounds = GAME_WIDTH + 60;
+                    Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                    while (enemies.Count - difficulty < 0)
+                    {
+                        deadEnemies[0].Position = pos;
+                        deadEnemies[0].Alive = true;
+                        enemies.Add(deadEnemies[0]);
+                        deadEnemies.RemoveAt(0);
+                    }
+                }
+                if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
+                {
+                    player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
+                    if (player.Up) player.Up = false;
+                    else player.Up = true;
+                }
+
+                // TODO: Add your update logic here
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    if (enemies[i].Alive)
+                    {
+                        enemies[i].Update(gameTime);
+                        if (enemies[i].Bounds.CollidesWith(player.Bounds))
+                        {
+
+                            enemies[i].Position = new Vector2(-10, -10);
+                            enemies[i].Alive = false;
+
+                            deadEnemies.Add(enemies[i]);
+                            enemies.Remove(enemies[i]);
+                            lives--;
+                            i--;
+                            if (lives > 0)
+                            {
+                                state = GameState.Pause;
+                            }
+                            else
+                            {
+                                state = GameState.Lost;
+                            }
+                        }
+                    }
+                }
+
+                player.Update(gameTime);
+                base.Update(gameTime);
+
+
             }
             else //game hasn't started or is over
             {
 
             }
-
-            if (enemies.Count < difficulty)
-            {
-                Random r = new Random();
-                int outerBounds = GAME_WIDTH + 60;
-                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                while (enemies.Count - difficulty < 0)
-                {
-                    deadEnemies[0].Position = pos;
-                    deadEnemies[0].Alive = true;
-                    enemies.Add(deadEnemies[0]);
-                    deadEnemies.RemoveAt(0);
-                }
-            }
-            if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
-            {
-                player.Direction = new Vector2(player.Direction.X, -player.Direction.Y);
-                if (player.Up) player.Up = false;
-                else player.Up = true;
-            }
-
-            // TODO: Add your update logic here
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].Alive)
-                {
-                    enemies[i].Update(gameTime);
-                    if (enemies[i].Bounds.CollidesWith(player.Bounds))
-                    {
-
-                        enemies[i].Position = new Vector2(-10, -10);
-                        enemies[i].Alive = false;
-
-                        deadEnemies.Add(enemies[i]);
-                        enemies.Remove(enemies[i]);
-                        lives--;
-                        i--;
-                        if (lives > 0)
-                        {
-                            state = GameState.Pause;
-                        }
-                        else
-                        {
-                            state = GameState.Lost;
-                        }
-                    }
-                }
-            }
-
-            player.Update(gameTime);
-            base.Update(gameTime);
         }
 
         Matrix translation = new Matrix();
@@ -292,6 +296,14 @@ namespace TimeGame
             _spriteBatch.End();
 
             _spriteBatch.Begin();
+
+            _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
+            player.Draw(gameTime, _spriteBatch);
+            foreach (GruntSprite e in enemies)
+            {
+                if (e.Alive)
+                    e.Draw(gameTime, _spriteBatch);
+            }
             switch (state)
             {
                 case GameState.Pause:
@@ -303,13 +315,7 @@ namespace TimeGame
                 case GameState.Unstarted:
                     break;
                 default:
-                    _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
-                    player.Draw(gameTime, _spriteBatch);
-                    foreach (GruntSprite e in enemies)
-                    {
-                        if (e.Alive)
-                        e.Draw(gameTime, _spriteBatch);
-                    }
+
                     break;
             }
             _spriteBatch.End();
