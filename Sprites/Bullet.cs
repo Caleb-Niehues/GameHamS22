@@ -26,6 +26,8 @@ namespace TimeGame.Sprites
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
         public BoundingCircle Bounds => bounds;
 
+        public bool Shot = false;
+
         private int speed;
         public int Speed
         {

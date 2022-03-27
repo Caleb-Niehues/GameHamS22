@@ -35,7 +35,7 @@ namespace TimeGame
         public float bulletRot;
         public Vector2 bulletDir;
 
-        
+        public BoundingRectangle gameBoundFront;
 
         public PlayerSprite player;
         public Tilemap _tilemap;
@@ -116,6 +116,7 @@ namespace TimeGame
             }
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT-128, GAME_WIDTH, 0);
+            gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
             base.Initialize();
         }
 
@@ -177,8 +178,8 @@ namespace TimeGame
                 MouseState currentMouse = Mouse.GetState();
 
                 //if (enemies.Count < difficulty)
-                    //hasBeenHit = false;
-                if(gunTimer > shootTime)
+                //hasBeenHit = false;
+                if (gunTimer > shootTime)
                 {
                     bulletRot = player.Arm.GetRot();
                     bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
@@ -231,41 +232,52 @@ namespace TimeGame
                                 state = GameState.Lost;
                             }
                         }
-                        if (i < 0) i = 0;
-                        bool dead = false;
-                        for (int j = 0; j < bullets.Count; j++)
-                        {
-                            bullets[j].Update(gameTime);
-                            if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
-                            {
-                                bullets[j].hitCount -= 1;
-                                if (bullets[j].hitCount <= 0)
-                                {
-                                    bullets[j].Position = new Vector2(-10, -10);
-                                    shotBullets.Add(bullets[j]);
-                                    bullets.RemoveAt(0);
-                                    j--;
-                                }
-                                dead = true;
-                                
-                            }
-                        }
-                        if (dead)
+                        else if (enemies[i].Bounds.CollidesWith(gameBoundFront))
                         {
                             enemies[i].Position = new Vector2(-10, -10);
                             enemies[i].Alive = false;
+
                             deadEnemies.Add(enemies[i]);
-                            enemies.RemoveAt(i);
-                            i--;
+                            enemies.Remove(enemies[i]);
+                            --i;
                         }
-
                     }
+                    if (i < 0) i = 0;
+                    bool dead = false;
+                    for (int j = 0; j < bullets.Count; j++)
+                    {
+                        bullets[j].Update(gameTime);
+                        if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
+                        {
+                            bullets[j].hitCount -= 1;
+                            if (bullets[j].hitCount <= 0)
+                            {
+                                bullets[j].Shot = true;
+                                bullets[j].Position = new Vector2(-10, -10);
+                                shotBullets.Add(bullets[j]);
+                                bullets.RemoveAt(j);
+                                j--;
+                            }
+                            dead = true;
+
+                        }
+                    }
+                    if (dead)
+                    {
+                        enemies[i].Position = new Vector2(-10, -10);
+                        enemies[i].Alive = false;
+                        deadEnemies.Add(enemies[i]);
+                        enemies.RemoveAt(i);
+                        i--;
+                    }
+
                 }
-
-
-
-
             }
+
+
+
+
+        
 
 
 

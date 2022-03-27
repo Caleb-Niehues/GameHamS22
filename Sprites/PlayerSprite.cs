@@ -100,7 +100,7 @@ namespace TimeGame.Sprites
             //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
             {
-
+                
                 if (Up)
                 {
                     direction.Y = 1;
