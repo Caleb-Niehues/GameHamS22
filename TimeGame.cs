@@ -303,7 +303,7 @@ namespace TimeGame
                     for (int j = 0; j < bullets.Count; j++)
                     {
                         bullets[j].Update(gameTime);
-                        if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds))
+                        if (bullets[j].Bounds.CollidesWith(enemies[i].Bounds) && !dead)
                         {
                             bullets[j].hitCount -= 1;
                             if (bullets[j].hitCount <= 0)

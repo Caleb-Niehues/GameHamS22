@@ -20,6 +20,16 @@ namespace TimeGame.Sprites
         protected Texture2D texture;
 
         /// <summary>
+        /// The Frame of the sprite animation
+        /// </summary>
+        protected short animationFrame;
+
+        /// <summary>
+        /// The timer for the sprite animation
+        /// </summary> 
+        protected double animationTime;
+
+        /// <summary>
         /// Width of the Sprite
         /// </summary>
         public int pixelWidth { get; protected set; }

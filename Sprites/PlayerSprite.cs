@@ -108,7 +108,7 @@ namespace TimeGame.Sprites
             speed = 60;
 
             //maybe flip "fast" direction to push you towards the dead zone?
-            if (previousMouseState != mouseState && mouseState.LeftButton == ButtonState.Pressed)
+            if (previousMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed)
             {
                 
                 if (Up)
@@ -122,7 +122,7 @@ namespace TimeGame.Sprites
                     Up = true;
                 }
             }
-            else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
+            if (previousMouseState.RightButton == ButtonState.Released && mouseState.RightButton == ButtonState.Pressed)
             {
                 
                 if (armIndex == 0)
@@ -151,8 +151,6 @@ namespace TimeGame.Sprites
         }
 
 
-        private short animationFrame;
-        private double animationTime;
         private short powerUp;
         /// <summary>
         /// Draws the animated ball

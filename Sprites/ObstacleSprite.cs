@@ -9,7 +9,8 @@ namespace TimeGame.Sprites
     {
         Concrete = 0,
         Crate = 1,
-        Cone = 2
+        Cone = 2,
+        SunPowerup = 3
     }
     public class ObstacleSprite : Sprite
     {
@@ -56,6 +57,10 @@ namespace TimeGame.Sprites
                     this.pixelHeight = 59;
                     source = new Rectangle(41, 41, pixelWidth, pixelHeight);
                     break;
+                case Obstacle.SunPowerup:
+                    this.pixelWidth = 41;
+                    this.pixelHeight = 50;
+                    break;
             }
         }
 
@@ -86,6 +91,24 @@ namespace TimeGame.Sprites
         /// <param name="spriteBatch">The SpriteBatch to draw with</param>
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            //Update animation frame
+            if (obstacle == Obstacle.SunPowerup)
+            {
+                animationTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (animationTime > .3)
+                {
+                    animationFrame++;
+                    animationTime = 0;
+                }
+                if (animationFrame > 1)
+                {
+                    animationFrame = 0;
+                }
+                source = new Rectangle(41 * 3, animationFrame * pixelHeight, pixelWidth, pixelHeight);
+            }
+            //if (Direction.Y < 0) animationFrame = 0;
+            //else animationFrame = 1;
+
             //Draw the sprite
             spriteBatch.Draw(texture, Position, source, Color.White);
         }
