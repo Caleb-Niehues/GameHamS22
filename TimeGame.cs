@@ -224,16 +224,17 @@ namespace TimeGame
             {
                 if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Q))
                 {
-                    if (score > upgrades[0] * costModifier)
+                    if (score >= upgrades[0] * costModifier * 2 && lives < 4)
                     {
-                        score -= upgrades[0] * costModifier;
+                        lives++;
+                        score -= upgrades[0] * costModifier * 2;
                         upgrades[0]++;
                         _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (score > upgrades[1] * costModifier)
+                    if (score >= upgrades[1] * costModifier)
                     {
                         score -= upgrades[1] * costModifier;
                         upgrades[1]++;
@@ -242,7 +243,7 @@ namespace TimeGame
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
                 {
-                    if (score > upgrades[2] * costModifier)
+                    if (score >= upgrades[2] * costModifier)
                     {
                         score -= upgrades[2] * costModifier;
                         upgrades[2]++;
@@ -251,7 +252,7 @@ namespace TimeGame
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
                 {
-                    if (score > upgrades[3] * costModifier)
+                    if (score >= upgrades[3] * costModifier)
                     {
                         score -= upgrades[3] * costModifier;
                         upgrades[3]++;
