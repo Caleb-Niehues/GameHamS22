@@ -18,9 +18,6 @@ namespace TimeGame.Sprites
 
         private PlayerSprite player;
 
-        private Texture2D bulletText;
-
-
         private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
         public BoundingCircle Bounds => bounds;
 
@@ -57,7 +54,7 @@ namespace TimeGame.Sprites
 
         public override void LoadContent(ContentManager content)
         {
-            bulletText = content.Load<Texture2D>("64-64-sprite-pack");
+            texture = content.Load<Texture2D>("64-64-sprite-pack");
         }
 
         public override void Update(GameTime gameTime)

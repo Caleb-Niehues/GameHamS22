@@ -22,10 +22,12 @@ namespace TimeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _gameFont;
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
         private bool hasBeenHit = false;
+        private int score;
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
@@ -41,11 +43,10 @@ namespace TimeGame
 
         public List<GruntSprite> deadEnemies;
 
-
+        public double gunTimer = 0;
+        public double shootTime = 2.0;
 
         public int difficulty = 2;
-
-
 
         /// <summary>
         /// The width of the game world
@@ -69,8 +70,6 @@ namespace TimeGame
             _graphics.PreferredBackBufferWidth = GAME_WIDTH;
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
-
-            
 
             Window.Title = "The Great Work";
         }
@@ -110,6 +109,7 @@ namespace TimeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
             _tilemap.LoadContent(this.Content);
+            _gameFont = this.Content.Load<SpriteFont>("Bangers");
             Pause.LoadContent(this.Content);
 
             foreach (GruntSprite e in enemies)
@@ -153,11 +153,16 @@ namespace TimeGame
             }
             else if (state == GameState.InPlay) //Gameplay occurs here
             {
+                gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 MouseState currentMouse = Mouse.GetState();
                 bulletRot = player.Arm.GetRot();
                 bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
                 //if (enemies.Count < difficulty)
                     //hasBeenHit = false;
+                if(gunTimer > shootTime)
+                {
+                    
+                }
                 if (enemies.Count < difficulty)
                 {
                     Random r = new Random();
@@ -209,7 +214,7 @@ namespace TimeGame
                         }
                     }
 
-                    
+                    score += (int)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
             else //game hasn't started or is over
@@ -267,9 +272,7 @@ namespace TimeGame
                 }
             }
 
-
-
-                    player.Update(gameTime);
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -299,10 +302,12 @@ namespace TimeGame
                     Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Pause:
+                    Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
                     break;
                 default:
+                    _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
                     player.Draw(gameTime, _spriteBatch);
                     foreach (GruntSprite e in enemies)
                     {
