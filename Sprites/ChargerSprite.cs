@@ -39,7 +39,7 @@ namespace TimeGame.Sprites
             pixelWidth = 128;
             pixelHeight = 96;
             Color = Color.White;
-            speed = 400;
+            speed = 300;
             pokeTimer = 0;
             Random r = new Random();
             Position = new Vector2(-64, r.Next(128, TimeGame.GAME_HEIGHT - 128));

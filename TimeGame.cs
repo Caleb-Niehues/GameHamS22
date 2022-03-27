@@ -216,7 +216,7 @@ namespace TimeGame
             if (lives < 1 && state != GameState.Lost)
             {
                 state = GameState.Lost;
-                UpdateLeaderboard("YOU", score);
+                UpdateLeaderboard(Environment.UserName, score);
             }
             else if (state == GameState.Pause) //logic for upgrades go here
             {
