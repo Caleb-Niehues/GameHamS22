@@ -29,7 +29,7 @@ namespace TimeGame
         private int lives = 3;
         private int scoreBucket;
         private int score;
-        private int costModifier = 25;
+        private int costModifier = 10;
         private int[] upgrades = { 1, 1, 1, 1 };
         private bool hasBeenHit = false;
         MouseState currentMouse;
@@ -55,6 +55,7 @@ namespace TimeGame
         public double shootTime = 2.0;
 
         public int difficulty = 2;
+        private int riserCheck;
 
         public List<Bullet> bullets;
         public List<Bullet> shotBullets;
@@ -218,7 +219,9 @@ namespace TimeGame
             else if (state == GameState.InPlay)
             {
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
-                MouseState currentMouse = Mouse.GetState();
+                currentMouse = Mouse.GetState();
+                riserCheck = gameTime.TotalGameTime.Seconds / 10;
+                if (riserCheck > difficulty && difficulty < 50) difficulty++;
 
                 //if (enemies.Count < difficulty)
                 //hasBeenHit = false;
@@ -324,10 +327,10 @@ namespace TimeGame
                     }
                 }
                 scoreBucket += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (scoreBucket > 1000)
+                if (scoreBucket > 100)
                 {
-                    score += scoreBucket / 1000;
-                    scoreBucket -= score * 1000;
+                    score += scoreBucket / 100;
+                    scoreBucket -= score * 100;
                 }
                 base.Update(gameTime);
             } 
