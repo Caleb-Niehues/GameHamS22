@@ -30,7 +30,7 @@ namespace TimeGame
         private int lives = 3;
         private int scoreBucket;
         private int score;
-        private int costModifier = 25;
+        private int costModifier = 5;
         private int[] upgrades = { 1, 1, 1, 1 };
         private bool hasBeenHit = false;
         MouseState currentMouse;
@@ -41,7 +41,7 @@ namespace TimeGame
         public Vector2 bulletDir;
 
 
-        public BoundingRectangle gameBoundFront;
+
 
         public PlayerSprite player;
         public Tilemap _tilemap;
@@ -56,6 +56,7 @@ namespace TimeGame
         public double shootTime = 2.0;
 
         public int difficulty = 2;
+        private int riserCheck;
 
         public List<Bullet> bullets;
         public List<Bullet> shotBullets;
@@ -72,6 +73,8 @@ namespace TimeGame
 
         public BoundingRectangle gameBoundTop;
         public BoundingRectangle gameBoundBottom;
+        public BoundingRectangle gameBoundFront;
+        public BoundingRectangle gameBoundBack;
 
         public Leaderboard Leaderboard;
 
@@ -131,9 +134,10 @@ namespace TimeGame
                 Bullet b = new Bullet();
                 shotBullets.Add(b);
             }
-            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH, 0);
+            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
+            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
             gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
+            gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH,0,1,GAME_HEIGHT);
             base.Initialize();
         }
 
@@ -226,7 +230,9 @@ namespace TimeGame
             else if (state == GameState.InPlay)
             {
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
-                MouseState currentMouse = Mouse.GetState();
+                currentMouse = Mouse.GetState();
+                riserCheck = gameTime.TotalGameTime.Seconds / 15;
+                if (riserCheck > difficulty && difficulty < 50) difficulty++;
 
                 //if (enemies.Count < difficulty)
                 //hasBeenHit = false;
@@ -316,11 +322,21 @@ namespace TimeGame
                                 bullets[j].Position = new Vector2(-10, -10);
                                 shotBullets.Add(bullets[j]);
                                 bullets.RemoveAt(j);
-                                j--;
+                                if(j > 0) j--;
                             }
                             dead = true;
 
                         }
+
+                        else if((bullets[j].Bounds.CollidesWith(gameBoundTop) || bullets[j].Bounds.CollidesWith(gameBoundBack) 
+                            || bullets[j].Bounds.CollidesWith(gameBoundFront) || bullets[j].Bounds.CollidesWith(gameBoundBottom)))
+                        {
+                            bullets[j].Position = new Vector2(-10, -10);
+                            shotBullets.Add(bullets[j]);
+                            bullets.RemoveAt(j);
+                            if(j > 0) j--;
+                        }
+                        
                     }
                     if (dead)
                     {
@@ -332,10 +348,10 @@ namespace TimeGame
                     }
                 }
                 scoreBucket += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (scoreBucket > 1000)
+                if (scoreBucket > 100)
                 {
-                    score += scoreBucket / 1000;
-                    scoreBucket -= score * 1000;
+                    score += scoreBucket / 100;
+                    scoreBucket -= score * 100;
                 }
                 base.Update(gameTime);
             } 
