@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace TimeGame.Scoring
 {
@@ -38,7 +39,21 @@ namespace TimeGame.Scoring
         public List<LeaderboardEntry> Sorted()
         {
             var tmp = Entries;
-            tmp.Sort();
+            return tmp.OrderByDescending(entry => entry.TimeLived).ToList();
+        }
+
+        public string[] Formatted()
+        {
+            var tmp = new string[5];
+
+            var sorted = Sorted();
+
+            tmp[0] = sorted[0].Formatted();
+            tmp[1] = sorted[1].Formatted();
+            tmp[2] = sorted[2].Formatted();
+            tmp[3] = sorted[3].Formatted();
+            tmp[4] = sorted[4].Formatted();
+
             return tmp;
         }
 

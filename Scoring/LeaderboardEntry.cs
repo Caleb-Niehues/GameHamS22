@@ -34,17 +34,7 @@ namespace TimeGame.Scoring
         /// <returns>the formatted string for the leaderboard output</returns>
         public string Formatted()
         {
-            return string.Format("{0} - {0}", initials_, SecondsToTime());
-        }
-
-        /// <summary>
-        /// Converters the seconds lived for the game into a formatted string
-        /// </summary>
-        /// <returns>Formatted string from the seconds lived</returns>
-        public string SecondsToTime()
-        {
-            var time = TimeSpan.FromSeconds(timeLived_);
-            return time.ToString(@":mm\:ss");
+            return string.Format("{0} - {1}", initials_, timeLived_);
         }
 
         /// <summary>
