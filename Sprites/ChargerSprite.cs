@@ -5,6 +5,7 @@ using System;
 using TimeGame.Collisions;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TimeGame.Sprites
 {
@@ -17,8 +18,12 @@ namespace TimeGame.Sprites
             set => direction = value;
         }
 
+        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
+
         public double pokeTimer = 0;
         public double pokeTiming = 1.5;
+        public bool hasPlayed = false;
+        public bool hasPlayed2 = false;
 
         public double peakTimer = 0;
         public double peakTiming = 1;
@@ -48,20 +53,33 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Pinky");
+            _soundEffects.Add(content.Load<SoundEffect>("Sounds/arrival"));
+            _soundEffects.Add(content.Load<SoundEffect>("Sounds/charge"));
         }
 
         public override void Update(GameTime gameTime)
         {
-            
-            
-            if (Position.X < 16) Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
+
+            if (Position.X < 16) 
+            {
+                Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
+                if (!hasPlayed2) 
+                {
+                    _soundEffects[0].Play();
+                    hasPlayed2 = true;
+                }
+            }
             else
             {
                 pokeTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 if (pokeTimer > pokeTiming)
                 {
                     Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, 0);
-
+                    if (!hasPlayed)
+                    {
+                        _soundEffects[1].Play();
+                        hasPlayed = true;
+                    }
                 }
             }
             

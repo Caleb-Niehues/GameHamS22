@@ -168,10 +168,12 @@ namespace TimeGame
             Pause.LoadContent(this.Content);
             Lost.LoadContent(this.Content);
 
+
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Pistol"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Shotgun"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Sniper"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Upgrade"));
+
 
             foreach (GruntSprite e in enemies)
             {
@@ -270,6 +272,8 @@ namespace TimeGame
                 {
                     chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
                     chargerStandby[0].pokeTimer = 0;
+                    chargerStandby[0].hasPlayed = false;
+                    chargerStandby[0].hasPlayed2 = false;
                     charger.Add(chargerStandby[0]);
                     chargerStandby.RemoveAt(0);
                     chargerTimer = 0;
