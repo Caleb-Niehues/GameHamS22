@@ -222,9 +222,10 @@ namespace TimeGame
             {
                 if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Q))
                 {
-                    if (score > upgrades[0] * costModifier)
+                    if (score > upgrades[0] * costModifier * 2 && lives < 4)
                     {
-                        score -= upgrades[0] * costModifier;
+                        lives++;
+                        score -= upgrades[0] * costModifier * 2;
                         upgrades[0]++;
                         _soundEffects[3].Play();
                     }
