@@ -22,10 +22,12 @@ namespace TimeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _gameFont;
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
         private bool hasBeenHit = false;
+        private int score;
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
@@ -74,8 +76,6 @@ namespace TimeGame
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
 
-            
-
             Window.Title = "The Great Work";
         }
 
@@ -123,7 +123,9 @@ namespace TimeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
             _tilemap.LoadContent(this.Content);
+            _gameFont = this.Content.Load<SpriteFont>("Bangers");
             Pause.LoadContent(this.Content);
+            Lose.LoadContent(this.Content);
 
             foreach (GruntSprite e in enemies)
             {
@@ -194,9 +196,6 @@ namespace TimeGame
                         enemies.Add(deadEnemies[0]);
                         deadEnemies.RemoveAt(0);
                     }
-
-
-
                 }
                 if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
                 {
@@ -230,13 +229,12 @@ namespace TimeGame
                                 state = GameState.Lost;
                             }
                         }
-                    } 
-                }
-            }
-            else //game hasn't started or is over
-            {
+                    }
 
-            }
+                    score += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                }
+
+
 
             if (enemies.Count < difficulty)
             {
@@ -270,8 +268,8 @@ namespace TimeGame
                     if (enemies[i].Bounds.CollidesWith(player.Bounds))
                     {
 
-                        enemies[i].Position = new Vector2(-10, -10);
-                        enemies[i].Alive = false;
+                            enemies[i].Position = new Vector2(-10, -10);
+                            enemies[i].Alive = false;
 
                         deadEnemies.Add(enemies[i]);
                         enemies.Remove(enemies[i]);
@@ -309,10 +307,31 @@ namespace TimeGame
                 }
             }
             
+                            deadEnemies.Add(enemies[i]);
+                            enemies.Remove(enemies[i]);
+                            lives--;
+                            i--;
+                            if (lives > 0)
+                            {
+                                state = GameState.Pause;
+                            }
+                            else
+                            {
+                                state = GameState.Lost;
+                            }
+                        }
+                    }
+                }
+
+                player.Update(gameTime);
+                base.Update(gameTime);
 
 
+            }
+            else //game hasn't started or is over
+            {
 
-            base.Update(gameTime);
+            }
         }
 
         Matrix translation = new Matrix();
@@ -335,12 +354,21 @@ namespace TimeGame
             _spriteBatch.End();
 
             _spriteBatch.Begin();
+
+            _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
+            player.Draw(gameTime, _spriteBatch);
+            foreach (GruntSprite e in enemies)
+            {
+                if (e.Alive)
+                    e.Draw(gameTime, _spriteBatch);
+            }
             switch (state)
             {
-                case GameState.Lost:
+                case GameState.Pause:
                     Pause.Draw(_spriteBatch);
                     break;
-                case GameState.Pause:
+                case GameState.Lost:
+                    Lose.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
                     break;

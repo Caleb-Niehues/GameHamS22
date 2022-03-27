@@ -124,10 +124,20 @@ namespace TimeGame.Sprites
             bounds.Center.Y = Position.Y - 16;
 
 
-            if(Arm is StartingGun sg)
+            if (Arm is StartingGun sg)
             {
                 sg.BodyPosition = Position;
                 sg.ArmPowerUp = powerUp;
+            }
+            else if (Arm is Shotgun shg)
+            {
+                shg.BodyPosition = Position;
+                shg.ArmPowerUp = powerUp;
+            }
+            else if (Arm is Sniper sng)
+            {
+                sng.BodyPosition = Position;
+                sng.ArmPowerUp = powerUp;
             }
             Arm.Update(gameTime);
         }
