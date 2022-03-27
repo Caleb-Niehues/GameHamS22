@@ -21,7 +21,7 @@ namespace TimeGame.Sprites
             this.pixelWidth = 64;
             this.pixelHeight = 128;
             Arm = new StartingGun(Position, new Vector2(32, 39));
-            bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 32, pixelHeight - 32);
+            bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 40, pixelHeight - 32);
         }
 
         private MouseState mouseState;
