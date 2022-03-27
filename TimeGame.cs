@@ -37,13 +37,6 @@ namespace TimeGame
         public List<EnemySprite> deadEnemies;
 
 
-        public int difficulty = 4;
-
-
-
-        public EnemySprite[] enemies2 = new EnemySprite[10];
-
-        public Queue<EnemySprite> freeEnemies;
 
         public int difficulty = 2;
 
@@ -148,30 +141,30 @@ namespace TimeGame
 
             if (state == GameState.Pause && lives > 0) //logic for upgrades go here
             {
-                
+
             }
             else if (state == GameState.InPlay) //Gameplay occurs here
             {
                 MouseState currentMouse = Mouse.GetState();
                 bulletRot = player.Arm.GetRot();
                 if (enemies.Count < difficulty)
-                hasBeenHit = false;
+                    hasBeenHit = false;
                 if (enemies.Count < 5)
                 {
                     Random r = new Random();
                     int outerBounds = GAME_WIDTH + 60;
                     Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                    
-                    while(enemies.Count - difficulty < 0)
+
+                    while (enemies.Count - difficulty < 0)
                     {
                         deadEnemies[0].Position = pos;
                         deadEnemies[0].Alive = true;
                         enemies.Add(deadEnemies[0]);
                         deadEnemies.RemoveAt(0);
                     }
-                    
-                    
-                    
+
+
+
                 }
                 if (player.Bounds.CollidesWith(gameBoundTop) || player.Bounds.CollidesWith(gameBoundBottom))
                 {
@@ -181,7 +174,7 @@ namespace TimeGame
                 }
                 player.Update(gameTime);
 
-                for(int i = 0; i < enemies.Count; i++)
+                for (int i = 0; i < enemies.Count; i++)
                 {
                     if (enemies[i].Alive)
                     {
@@ -191,7 +184,7 @@ namespace TimeGame
 
                             enemies[i].Position = new Vector2(-10, -10);
                             enemies[i].Alive = false;
-                            
+
                             deadEnemies.Add(enemies[i]);
                             enemies.Remove(enemies[i]);
                             lives--;
@@ -206,32 +199,33 @@ namespace TimeGame
                             }
                         }
                     }
-                    
-                foreach (EnemySprite e in enemies)
-                {
-                    e.Update(gameTime);
-                    if (e.Bounds.CollidesWith(player.Bounds))
+
+                    /*foreach (EnemySprite e in enemies)
                     {
-                        hasBeenHit = true;
-                        //e.Deactivate
+                        e.Update(gameTime);
+                        if (e.Bounds.CollidesWith(player.Bounds))
+                        {
+                            hasBeenHit = true;
+                            //e.Deactivate
+                        }
                     }
-                }
-                if (hasBeenHit)
-                {
-                    lives--;
-                    if (lives > 0)
+                    if (hasBeenHit)
                     {
-                        state = GameState.Pause;
-                    }
-                    else
-                    {
-                        state = GameState.Lost;
-                    }
+                        lives--;
+                        if (lives > 0)
+                        {
+                            //state = GameState.Pause;
+                        }
+                        else
+                        {
+                            state = GameState.Lost;
+                        }
+                    }*/
                 }
             }
             else //game hasn't started or is over
             {
-            
+
             }
 
             if (enemies.Count < difficulty)
@@ -239,9 +233,13 @@ namespace TimeGame
                 Random r = new Random();
                 int outerBounds = GAME_WIDTH + 60;
                 Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                EnemySprite enemy = new EnemySprite(pos, player);
-                enemy.LoadContent(this.Content);
-                enemies.Add(enemy);
+                while (enemies.Count - difficulty < 0)
+                {
+                    deadEnemies[0].Position = pos;
+                    deadEnemies[0].Alive = true;
+                    enemies.Add(deadEnemies[0]);
+                    deadEnemies.RemoveAt(0);
+                }
             }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -251,23 +249,38 @@ namespace TimeGame
                 if (player.Up) player.Up = false;
                 else player.Up = true;
             }
-            // TODO: Add your update logic here
-            foreach (EnemySprite e in enemies)
-            {
-                e.Update(gameTime);
-                if (player.Bounds.CollidesWith(e.Bounds))
-                {
-                    enemies.Remove(e);
-                    
-                }
-                
-                
 
+            // TODO: Add your update logic here
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i].Alive)
+                {
+                    enemies[i].Update(gameTime);
+                    if (enemies[i].Bounds.CollidesWith(player.Bounds))
+                    {
+
+                        enemies[i].Position = new Vector2(-10, -10);
+                        enemies[i].Alive = false;
+
+                        deadEnemies.Add(enemies[i]);
+                        enemies.Remove(enemies[i]);
+                        lives--;
+                        i--;
+                        if (lives > 0)
+                        {
+                            //state = GameState.Pause;
+                        }
+                        else
+                        {
+                            state = GameState.Lost;
+                        }
+                    }
+                }
             }
 
-            
-            
-            player.Update(gameTime);
+
+
+                    player.Update(gameTime);
             base.Update(gameTime);
         }
 

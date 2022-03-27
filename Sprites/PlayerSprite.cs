@@ -111,7 +111,7 @@ namespace TimeGame.Sprites
                     Up = true;
                 }
 
-                speed = 250;
+                speed = 100;
             }
             else if (previousMouseState != mouseState && mouseState.RightButton == ButtonState.Pressed)
             {

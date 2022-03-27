@@ -62,7 +62,7 @@ namespace TimeGame.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            Position += 
+           
         }
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
