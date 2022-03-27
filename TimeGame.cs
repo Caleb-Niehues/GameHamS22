@@ -22,10 +22,12 @@ namespace TimeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _gameFont;
 
         private GameState state = GameState.InPlay;
         private int lives = 3;
         private bool hasBeenHit = false;
+        private int score;
         private KeyboardState keyboardState;
         private KeyboardState previousKeyboard;
 
@@ -41,11 +43,7 @@ namespace TimeGame
 
         public List<GruntSprite> deadEnemies;
 
-
-
         public int difficulty = 2;
-
-
 
         /// <summary>
         /// The width of the game world
@@ -70,8 +68,6 @@ namespace TimeGame
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
 
-            
-
             Window.Title = "The Great Work";
         }
 
@@ -81,9 +77,8 @@ namespace TimeGame
             player = new PlayerSprite();
             _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
 
-
-            enemies = new List<GruntSprite>();
-            deadEnemies = new List<GruntSprite>();
+            enemies = new List<EnemySprite>();
+            deadEnemies = new List<EnemySprite>();
             
             Random r = new Random();
             for(int i = 0; i < 10; i++)
@@ -110,6 +105,7 @@ namespace TimeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             player.LoadContent(this.Content);
             _tilemap.LoadContent(this.Content);
+            _gameFont = this.Content.Load<SpriteFont>("Bangers");
             Pause.LoadContent(this.Content);
 
             foreach (GruntSprite e in enemies)
@@ -209,7 +205,7 @@ namespace TimeGame
                         }
                     }
 
-                    
+                    score += (int)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
             else //game hasn't started or is over
@@ -267,9 +263,7 @@ namespace TimeGame
                 }
             }
 
-
-
-                    player.Update(gameTime);
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -299,10 +293,12 @@ namespace TimeGame
                     Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Pause:
+                    Pause.Draw(_spriteBatch);
                     break;
                 case GameState.Unstarted:
                     break;
                 default:
+                    _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Gold);
                     player.Draw(gameTime, _spriteBatch);
                     foreach (GruntSprite e in enemies)
                     {
