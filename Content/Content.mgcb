@@ -242,17 +242,35 @@
 /processorParam:Quality=Best
 /build:Sounds/arrival.mp3
 
+#begin Sounds/Block Break 1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Block Break 1.wav
+
 #begin Sounds/charge.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/charge.mp3
 
+#begin Sounds/error_style_4_echo_001.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/error_style_4_echo_001.wav
+
 #begin Sounds/Pistol.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Pistol.mp3
+
+#begin Sounds/SFX_Powerup_34.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/SFX_Powerup_34.wav
 
 #begin Sounds/Shotgun.mp3
 /importer:Mp3Importer
