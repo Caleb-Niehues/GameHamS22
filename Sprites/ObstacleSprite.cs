@@ -70,7 +70,7 @@ namespace TimeGame.Sprites
         /// <param name="content">The ContentManager to load with</param>
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("Obstacles");
+            texture = content.Load<Texture2D>("64-64-sprite-pack");
         }
 
         /// <summary>

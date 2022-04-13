@@ -36,6 +36,7 @@ namespace TimeGame
         private int score;
         private int costModifier = 5;
         private int[] upgrades = { 1, 1, 1, 1 };
+        //private int[] powerUp = { 0, 100, 100, 100 };
         private bool hasBeenHit = false;
         MouseState currentMouse;
         private KeyboardState keyboardState;
@@ -56,6 +57,9 @@ namespace TimeGame
 
         public List<ChargerSprite> charger;
         public List<ChargerSprite> chargerStandby;
+
+        public List<PowerUpSprite> powerUps;
+        public List<PowerUpSprite> standbyPowerUps;
 
         public double gunTimer = 0;
         public double shootTime = 2.0;
@@ -116,15 +120,17 @@ namespace TimeGame
             enemies = new List<GruntSprite>();
             deadEnemies = new List<GruntSprite>();
 
+            charger = new List<ChargerSprite>();
+            chargerStandby = new List<ChargerSprite>();
+
             bullets = new List<Bullet>();
             shotBullets = new List<Bullet>();
 
+            powerUps = new List<PowerUpSprite>();
+            standbyPowerUps = new List<PowerUpSprite>();
+
             Leaderboard = new Leaderboard();
-
             Leaderboard.Load();
-
-            charger = new List<ChargerSprite>();
-            chargerStandby = new List<ChargerSprite>();
 
             for(int i = 0; i < 10; i++)
             {
@@ -147,15 +153,24 @@ namespace TimeGame
                 }
 
             }
+
             for (int i = 0; i < 50; i++)
             {
                 Bullet b = new Bullet();
                 shotBullets.Add(b);
             }
+
+            for (int i = 0; i < 1; i++)
+            {
+                PowerUpSprite p = new PowerUpSprite(new Vector2(64*12, 225), new Vector2(-1,0), 50);
+                powerUps.Add(p);
+            }
+
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
             gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
             gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH,0,1,GAME_HEIGHT);
+
             base.Initialize();
         }
 
@@ -183,13 +198,17 @@ namespace TimeGame
             {
                 e.LoadContent(this.Content);
             }
+            foreach (ChargerSprite c in chargerStandby)
+            {
+                c.LoadContent(Content);
+            }
             foreach (Bullet b in shotBullets)
             {
                 b.LoadContent(Content);
             }
-            foreach(ChargerSprite c in chargerStandby)
+            foreach (PowerUpSprite p in powerUps)
             {
-                c.LoadContent(Content);
+                p.LoadContent(Content);
             }
         }
 
@@ -425,6 +444,7 @@ namespace TimeGame
                     
 
                 }
+
                 scoreBucket += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (scoreBucket > 100)
                 {
