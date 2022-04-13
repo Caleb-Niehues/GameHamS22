@@ -19,6 +19,8 @@ namespace TimeGame.Sprites
         /// </summary>
         public BoundingCircle Bounds => bounds;
 
+        public bool IsActive = true;
+
         /// <summary>
         /// 
         /// </summary>

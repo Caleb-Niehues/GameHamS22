@@ -353,6 +353,16 @@ namespace TimeGame
                 }
                 player.Update(gameTime);
 
+                foreach (PowerUpSprite p in powerUps)
+                {
+                    p.Update(gameTime);
+                    if (p.Bounds.CollidesWith(player.Bounds) && p.IsActive)
+                    {
+                        lives++;
+                        p.IsActive = false;
+                    }
+                }
+
                 for (int i = 0; i < enemies.Count; i++)
                 {
                     if (enemies[i].Alive)
@@ -486,19 +496,23 @@ namespace TimeGame
             _spriteBatch.Begin();
             
             
-            foreach(ChargerSprite c in charger)
-            {
-                c.Draw(gameTime, _spriteBatch);
-            }
             player.Draw(gameTime, _spriteBatch);
             foreach (GruntSprite e in enemies)
             {
                 if (e.Alive)
                     e.Draw(gameTime, _spriteBatch);
             }
+            foreach (ChargerSprite c in charger)
+            {
+                c.Draw(gameTime, _spriteBatch);
+            }
             foreach (Bullet b in bullets)
             {
                 b.Draw(gameTime, _spriteBatch);
+            }
+            foreach (PowerUpSprite p in powerUps)
+            {
+                p.Draw(gameTime, _spriteBatch);
             }
             switch (state)
             {
