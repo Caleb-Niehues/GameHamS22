@@ -65,7 +65,7 @@ namespace TimeGame
         public double shootTime = 2.0;
 
         public int difficulty = 2;
-        private int riserCheck;
+        private double riserCheck;
 
         public List<Bullet> bullets;
         public List<Bullet> shotBullets;
@@ -286,9 +286,13 @@ namespace TimeGame
                 chargerTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 currentMouse = Mouse.GetState();
-                riserCheck = gameTime.TotalGameTime.Seconds / 15;
-                if (riserCheck > difficulty && difficulty < 50) difficulty++;
-                if(chargerTimer > chargeWaitTime) 
+                riserCheck += gameTime.ElapsedGameTime.TotalSeconds / 15;
+                if (riserCheck > difficulty && difficulty < 50)
+                {
+                    riserCheck = 0;
+                    difficulty++;
+                }
+                if (chargerTimer > chargeWaitTime) 
                 {
                     chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
                     chargerStandby[0].pokeTimer = 0;
@@ -512,7 +516,8 @@ namespace TimeGame
             }
             foreach (PowerUpSprite p in powerUps)
             {
-                p.Draw(gameTime, _spriteBatch);
+                if(p.IsActive)
+                    p.Draw(gameTime, _spriteBatch);
             }
             switch (state)
             {
