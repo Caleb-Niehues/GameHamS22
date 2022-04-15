@@ -428,6 +428,7 @@ namespace TimeGame
                             crates[k].IsActive = false;
                             standbyCrates.Add(crates[k]);
                             crates.RemoveAt(k);
+                            state = GameState.Pause;
                             k--;
                         }
                         else if (crates[k].Bounds.CollidesWith(gameBoundFront))
