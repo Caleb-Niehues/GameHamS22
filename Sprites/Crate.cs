@@ -179,7 +179,8 @@ namespace TimeGame.Sprites
         {
             //Rotate object here? 
 
-            //effect.world    rotate
+            float angle = 2 * (float)gameTime.TotalGameTime.TotalSeconds;
+            effect.World = Matrix.CreateRotationY(angle) * Matrix.CreateTranslation(effect.World.Translation);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
