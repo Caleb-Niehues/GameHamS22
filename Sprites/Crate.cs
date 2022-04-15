@@ -79,7 +79,15 @@ namespace TimeGame.Sprites
 
                 default:
                     effect.World = Matrix.CreateTranslation(25, 10, 0);
+                    // where 25 is the x coordinate of the box (not pixels)
+                    //where 10 is the y coordinate of the box (not pixels)
+                    //where 0 is vield of view
+
                     Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
+                    //where 0 is x (unused)
+                    //where 15 is height of camera compared to box (0 is dead straight)
+                    //where 30 is distance to box (larger means smaller box)
+                    //1f also to size of box
 
                     box = new BoundingRectangle(windowWidth + 40, 25, 50, 75);
                     break;
