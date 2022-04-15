@@ -431,9 +431,8 @@ namespace TimeGame
                             state = GameState.Pause;
                             k--;
                         }
-                        else if (crates[k].Bounds.CollidesWith(gameBoundFront))
+                        else if (crates[k].Bounds.X + 50 < 0)
                         {
-                            _soundEffects[4].Play();
                             crates[k].IsActive = false;
                             standbyCrates.Add(crates[k]);
                             crates.RemoveAt(k);

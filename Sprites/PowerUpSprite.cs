@@ -10,7 +10,7 @@ namespace TimeGame.Sprites
     {
         private int speed = 0;
 
-        private Rectangle source = new Rectangle(0, 0, 32, 32);
+        private Rectangle source = new Rectangle(0, 0, 47, 47);
 
         private BoundingCircle bounds;
 
