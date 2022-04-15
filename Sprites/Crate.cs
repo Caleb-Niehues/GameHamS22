@@ -65,26 +65,26 @@ namespace TimeGame.Sprites
                     effect.World = Matrix.CreateTranslation(25, 4.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
 
-                    Bounds = new BoundingRectangle(_width + 40, 125, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 135, 50, 65);
                     break;
                 case 2:
                     effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
 
-                    Bounds = new BoundingRectangle(_width + 40, 225, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 225, 50, 65);
                     break;
                 case 3:
                     effect.World = Matrix.CreateTranslation(25, -6, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
 
-                    Bounds = new BoundingRectangle(_width + 40, 325, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 325, 50, 65);
                     break;
 
                 default:
                     effect.World = Matrix.CreateTranslation(25, 10, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
 
-                    Bounds = new BoundingRectangle(_width + 40, 25, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 25, 50, 65);
                     break;
             }
         }
@@ -107,21 +107,21 @@ namespace TimeGame.Sprites
                     Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
 
                     Bounds.X = _width + 40;
-                    Bounds.Y = 125;
+                    Bounds.Y = 135;
                     break;
                 case 2:
                     effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
 
                     Bounds.X = _width + 40;
-                    Bounds.Y = 225;
+                    Bounds.Y = 235;
                     break;
                 case 3:
                     effect.World = Matrix.CreateTranslation(25, -6, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
 
                     Bounds.X = _width + 40;
-                    Bounds.Y = 325;
+                    Bounds.Y = 335;
                     break;
 
                 default:
@@ -129,7 +129,7 @@ namespace TimeGame.Sprites
                     Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
 
                     Bounds.X = _width + 40;
-                    Bounds.Y = 25;
+                    Bounds.Y = 35;
                     break;
             }
         }
