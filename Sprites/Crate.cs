@@ -37,9 +37,6 @@ namespace TimeGame.Sprites
         // The effect to render the crate with
         BasicEffect effect;
 
-        // The texture to apply to the crate
-        Texture2D texture;
-
         public BoundingRectangle Bounds;
 
         CirclingCamera Camera;
@@ -55,6 +52,7 @@ namespace TimeGame.Sprites
         {
             this.game = game;
             this.texture = game.Content.Load<Texture2D>($"crate{(int)type}_diffuse");
+            this.IsActive = true;
             InitializeEffect();
             switch ((heightSpawn - 1) % 4)
             {

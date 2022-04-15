@@ -373,9 +373,10 @@ namespace TimeGame
                 foreach (Crate c in crates)
                 {
                     c.Update(gameTime);
-                    if (c.Bounds.CollidesWith(player.Bounds))
+                    if (c.Bounds.CollidesWith(player.Bounds) && c.IsActive)
                     {
                         lives--;
+                        c.IsActive = false;
                     }
                 }
 
@@ -413,7 +414,7 @@ namespace TimeGame
 
                             deadEnemies.Add(enemies[i]);
                             enemies.Remove(enemies[i]);
-                            --i;
+                            i--;
                         }
                         
                     }
@@ -538,7 +539,8 @@ namespace TimeGame
             }
             foreach (Crate c in crates)
             {
-                c.Draw(gameTime, _spriteBatch);
+                if(c.IsActive)
+                    c.Draw(gameTime, _spriteBatch);
             }
             foreach (PowerUpSprite p in powerUps)
             {
