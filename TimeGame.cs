@@ -45,9 +45,6 @@ namespace TimeGame
         public float bulletRot;
         public Vector2 bulletDir;
 
-
-
-
         public PlayerSprite player;
         public Tilemap _tilemap;
 
@@ -60,6 +57,9 @@ namespace TimeGame
 
         public List<PowerUpSprite> powerUps;
         public List<PowerUpSprite> standbyPowerUps;
+
+        public List<Crate> crates;
+        public List<Crate> standbyCrates;
 
         public double gunTimer = 0;
         public double shootTime = 2.0;
@@ -129,6 +129,9 @@ namespace TimeGame
             powerUps = new List<PowerUpSprite>();
             standbyPowerUps = new List<PowerUpSprite>();
 
+            crates = new List<Crate>();
+            standbyCrates = new List<Crate>();
+
             Leaderboard = new Leaderboard();
             Leaderboard.Load();
 
@@ -164,6 +167,12 @@ namespace TimeGame
             {
                 PowerUpSprite p = new PowerUpSprite(new Vector2(64*12, 225), new Vector2(-1,0), 50);
                 powerUps.Add(p);
+            }
+
+            for (int i = 0; i < 1; i++)
+            {
+                Crate c = new Crate(this, CrateType.DarkCross, 2, GAME_WIDTH);
+                crates.Add(c);
             }
 
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
@@ -209,6 +218,10 @@ namespace TimeGame
             foreach (PowerUpSprite p in powerUps)
             {
                 p.LoadContent(Content);
+            }
+            foreach (Crate c in crates)
+            {
+                c.LoadContent(Content);
             }
         }
 
@@ -356,6 +369,12 @@ namespace TimeGame
                     else player.Up = true;
                 }
                 player.Update(gameTime);
+
+                foreach (Crate c in crates)
+                {
+                    c.Update(gameTime);
+                    if(c.Bounds.CollidesWith(player.Bounds))
+                }
 
                 foreach (PowerUpSprite p in powerUps)
                 {

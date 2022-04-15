@@ -40,7 +40,7 @@ namespace TimeGame.Sprites
         // The texture to apply to the crate
         Texture2D texture;
 
-        BoundingRectangle box;
+        public BoundingRectangle Bounds;
 
         CirclingCamera Camera;
 
@@ -62,19 +62,19 @@ namespace TimeGame.Sprites
                     effect.World = Matrix.CreateTranslation(25, 4.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
 
-                    box = new BoundingRectangle(windowWidth + 40, 125, 50, 75);
+                    Bounds = new BoundingRectangle(windowWidth + 40, 125, 50, 75);
                     break;
                 case 2:
                     effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
 
-                    box = new BoundingRectangle(windowWidth + 40, 225, 50, 75);
+                    Bounds = new BoundingRectangle(windowWidth + 40, 225, 50, 75);
                     break;
                 case 3:
                     effect.World = Matrix.CreateTranslation(25, -6, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
 
-                    box = new BoundingRectangle(windowWidth + 40, 325, 50, 75);
+                    Bounds = new BoundingRectangle(windowWidth + 40, 325, 50, 75);
                     break;
 
                 default:
@@ -89,7 +89,7 @@ namespace TimeGame.Sprites
                     //where 30 is distance to box (larger means smaller box)
                     //1f also to size of box
 
-                    box = new BoundingRectangle(windowWidth + 40, 25, 50, 75);
+                    Bounds = new BoundingRectangle(windowWidth + 40, 25, 50, 75);
                     break;
             }
         }
@@ -210,7 +210,7 @@ namespace TimeGame.Sprites
         {
             InitializeVertices();
             InitializeIndices();
-            box.LoadContent(content);
+            Bounds.LoadContent(content);
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace TimeGame.Sprites
             float angle = 2 * (float)gameTime.TotalGameTime.TotalSeconds;
             effect.World = Matrix.CreateRotationY(angle) * Matrix.CreateTranslation(effect.World.Translation);
 
-            box.X = box.X - (75 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Bounds.X = Bounds.X - (75 * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Camera.Update(gameTime);
         }
@@ -253,7 +253,7 @@ namespace TimeGame.Sprites
                 12                          // the number of triangles to draw
             );
             
-            box.Draw(gameTime, spriteBatch);
+            Bounds.Draw(gameTime, spriteBatch);
         }
     }
 }
