@@ -41,6 +41,9 @@ namespace TimeGame.Sprites
 
         CirclingCamera Camera;
 
+        int _width;
+        int _heightSpawn;
+
         /// <summary>
         /// Creates a new crate instance
         /// </summary>
@@ -50,44 +53,83 @@ namespace TimeGame.Sprites
         /// <param name="windowWidth">width of window (1-4)</param>
         public Crate(Game game, CrateType type, int heightSpawn, int windowWidth)
         {
+            this.IsActive = true;
             this.game = game;
             this.texture = game.Content.Load<Texture2D>($"crate{(int)type}_diffuse");
-            this.IsActive = true;
             InitializeEffect();
+            _heightSpawn = heightSpawn;
+            _width = windowWidth;
             switch ((heightSpawn - 1) % 4)
             {
                 case 1:
                     effect.World = Matrix.CreateTranslation(25, 4.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
 
-                    Bounds = new BoundingRectangle(windowWidth + 40, 125, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 125, 50, 75);
                     break;
                 case 2:
                     effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
 
-                    Bounds = new BoundingRectangle(windowWidth + 40, 225, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 225, 50, 75);
                     break;
                 case 3:
                     effect.World = Matrix.CreateTranslation(25, -6, 0);
                     Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
 
-                    Bounds = new BoundingRectangle(windowWidth + 40, 325, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 325, 50, 75);
                     break;
 
                 default:
                     effect.World = Matrix.CreateTranslation(25, 10, 0);
-                    // where 25 is the x coordinate of the box (not pixels)
-                    //where 10 is the y coordinate of the box (not pixels)
-                    //where 0 is vield of view
-
                     Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
-                    //where 0 is x (unused)
-                    //where 15 is height of camera compared to box (0 is dead straight)
-                    //where 30 is distance to box (larger means smaller box)
-                    //1f also to size of box
 
-                    Bounds = new BoundingRectangle(windowWidth + 40, 25, 50, 75);
+                    Bounds = new BoundingRectangle(_width + 40, 25, 50, 75);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// reloads crate on right side of map
+        /// </summary>
+        /// <param name="heightSpawn">spawning location of box (1-4): default is previous</param>
+        public void ResetCrate(int heightSpawn = 0)
+        {
+            if (heightSpawn != 0)
+            {
+                _heightSpawn = heightSpawn;
+            }
+            InitializeEffect();
+            switch ((_heightSpawn - 1) % 4)
+            {
+                case 1:
+                    effect.World = Matrix.CreateTranslation(25, 4.5f, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
+
+                    Bounds.X = _width + 40;
+                    Bounds.Y = 125;
+                    break;
+                case 2:
+                    effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
+
+                    Bounds.X = _width + 40;
+                    Bounds.Y = 225;
+                    break;
+                case 3:
+                    effect.World = Matrix.CreateTranslation(25, -6, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
+
+                    Bounds.X = _width + 40;
+                    Bounds.Y = 325;
+                    break;
+
+                default:
+                    effect.World = Matrix.CreateTranslation(25, 10, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
+
+                    Bounds.X = _width + 40;
+                    Bounds.Y = 25;
                     break;
             }
         }
@@ -223,6 +265,12 @@ namespace TimeGame.Sprites
             effect.World = Matrix.CreateRotationY(angle) * Matrix.CreateTranslation(effect.World.Translation);
 
             Bounds.X = Bounds.X - (75 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            if (Bounds.X + Bounds.Width + 10 <= 0)
+            {
+                IsActive = false;
+                //ResetCrate(_heightSpawn);
+            }
 
             Camera.Update(gameTime);
         }
