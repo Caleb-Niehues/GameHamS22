@@ -15,6 +15,11 @@ namespace TimeGame.Sprites
         public Vector2 Position;
 
         /// <summary>
+        /// Whether or not this sprite is active and on screen
+        /// </summary>
+        public bool IsActive;
+
+        /// <summary>
         /// The texture of the sprite
         /// </summary>
         protected Texture2D texture;

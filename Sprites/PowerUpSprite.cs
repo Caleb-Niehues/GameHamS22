@@ -19,8 +19,6 @@ namespace TimeGame.Sprites
         /// </summary>
         public BoundingCircle Bounds => bounds;
 
-        public bool IsActive = true;
-
         /// <summary>
         /// 
         /// </summary>
@@ -34,6 +32,7 @@ namespace TimeGame.Sprites
             this.Position = position;
             this.direction = direction;
             this.speed = speed;
+            this.IsActive = true;
         }
 
         /// <summary>

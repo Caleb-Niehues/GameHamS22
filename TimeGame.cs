@@ -373,7 +373,10 @@ namespace TimeGame
                 foreach (Crate c in crates)
                 {
                     c.Update(gameTime);
-                    if(c.Bounds.CollidesWith(player.Bounds))
+                    if (c.Bounds.CollidesWith(player.Bounds))
+                    {
+                        lives--;
+                    }
                 }
 
                 foreach (PowerUpSprite p in powerUps)
@@ -532,6 +535,10 @@ namespace TimeGame
             foreach (Bullet b in bullets)
             {
                 b.Draw(gameTime, _spriteBatch);
+            }
+            foreach (Crate c in crates)
+            {
+                c.Draw(gameTime, _spriteBatch);
             }
             foreach (PowerUpSprite p in powerUps)
             {

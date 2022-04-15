@@ -66,9 +66,7 @@ namespace TimeGame.Collisions
         }
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             spriteBatch.Draw(texture, new Rectangle((int)X, (int)Y, (int)Width, (int)Height), Color.DarkRed * (float).8);
-            spriteBatch.End();
         }
     }
 }
