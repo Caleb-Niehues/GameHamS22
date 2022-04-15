@@ -177,13 +177,9 @@ namespace TimeGame.Sprites
         /// <param name="gameTime"></param>
         public override void Update(GameTime gameTime)
         {
-            float angle = (float)gameTime.TotalGameTime.TotalSeconds;
-            // Look at the cube from farther away while spinning around it
-            effect.View = Matrix.CreateRotationY(angle) * Matrix.CreateLookAt(
-                new Vector3(0, 5, -10),
-                Vector3.Zero,
-                Vector3.Up
-            );
+            //Rotate object here? 
+
+            //effect.world    rotate
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

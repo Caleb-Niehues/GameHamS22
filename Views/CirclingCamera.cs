@@ -17,6 +17,9 @@ namespace TimeGame.Views
         // The camera's position
         Vector3 position;
 
+        // The camera's target
+        Vector3 target;
+
         // The camera's speed 
         float speed;
 
@@ -61,6 +64,8 @@ namespace TimeGame.Views
                 Vector3.Zero,
                 Vector3.Up
             );
+
+            this.target = new Vector3(0, 0, 0);
         }
 
         /// <summary>
@@ -73,8 +78,12 @@ namespace TimeGame.Views
             angle += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Calculate a new view matrix
+            target += new Vector3(4 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 0);
+            position += new Vector3(4 * (float)gameTime.ElapsedGameTime.TotalSeconds, 0, 0);
+
+            // Calculate a new view matrix
             this.view =
-                Matrix.CreateRotationY(angle) *
+                //Matrix.CreateRotationY(angle) *
                 Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
         }
     }
