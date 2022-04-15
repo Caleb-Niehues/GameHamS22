@@ -84,7 +84,7 @@ namespace TimeGame.Views
             // Calculate a new view matrix
             this.view =
                 //Matrix.CreateRotationY(angle) *
-                Matrix.CreateLookAt(position, Vector3.Zero, Vector3.Up);
+                Matrix.CreateLookAt(position, target, Vector3.Up);
         }
     }
 }
