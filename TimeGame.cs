@@ -433,6 +433,7 @@ namespace TimeGame
                         }
                         else if (crates[k].Bounds.CollidesWith(gameBoundFront))
                         {
+                            _soundEffects[4].Play();
                             crates[k].IsActive = false;
                             standbyCrates.Add(crates[k]);
                             crates.RemoveAt(k);

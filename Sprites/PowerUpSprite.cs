@@ -27,7 +27,7 @@ namespace TimeGame.Sprites
         /// <param name="yDirection"></param>
         public PowerUpSprite(Vector2 position, Vector2 direction, int speed)
         {
-            this.pixelWidth = 16;
+            this.pixelWidth = 47;
             this.bounds = new BoundingCircle(position - new Vector2(pixelWidth, pixelWidth), pixelWidth);
             this.Position = position;
             this.direction = direction;
@@ -41,7 +41,7 @@ namespace TimeGame.Sprites
         /// <param name="content">The ContentManager to load with</param>
         public override void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("Obstacles");
+            texture = content.Load<Texture2D>("HeartPowerUp");
         }
 
         /// <summary>
