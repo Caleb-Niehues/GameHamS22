@@ -299,7 +299,6 @@ namespace TimeGame.Sprites
                 12                          // the number of triangles to draw
             );
             
-            Bounds.Draw(gameTime, spriteBatch);
         }
     }
 }
