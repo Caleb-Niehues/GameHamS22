@@ -197,6 +197,12 @@ namespace TimeGame
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Shotgun"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Sniper"));
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Upgrade"));
+            // [4] = Block Break
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/Block Break 1"));
+            // [5] = Health Lost
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/error_style_4_echo_001"));
+            // [6] = Powerup Gained
+            _soundEffects.Add(Content.Load<SoundEffect>("Sounds/SFX_Powerup_34"));
 
 
             foreach (GruntSprite e in enemies)
@@ -242,6 +248,7 @@ namespace TimeGame
                         break;
                     default:
                         lives--;
+                        _soundEffects[5].Play();
                         state = GameState.Pause;
                         break;
                 }
@@ -376,6 +383,7 @@ namespace TimeGame
                     if (c.Bounds.CollidesWith(player.Bounds) && c.IsActive)
                     {
                         lives--;
+                        _soundEffects[4].Play();
                         c.IsActive = false;
                     }
                 }
@@ -386,6 +394,7 @@ namespace TimeGame
                     if (p.Bounds.CollidesWith(player.Bounds) && p.IsActive)
                     {
                         lives++;
+                        _soundEffects[6].Play();
                         p.IsActive = false;
                     }
                 }
@@ -404,6 +413,7 @@ namespace TimeGame
                             deadEnemies.Add(enemies[i]);
                             enemies.Remove(enemies[i]);
                             lives--;
+                            _soundEffects[5].Play();
                             state = GameState.Pause;
                             i--;
                         }
@@ -462,6 +472,7 @@ namespace TimeGame
                             chargerStandby.Add(charger[j]);
                             charger.RemoveAt(j);
                             lives--;
+                            _soundEffects[5].Play();
                             state = GameState.Pause;
                             if (j > 0) j--;
                         }
