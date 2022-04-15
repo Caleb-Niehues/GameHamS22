@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TimeGame.Collisions;
 using TimeGame.Views;
 
 namespace TimeGame.Sprites
@@ -39,18 +40,50 @@ namespace TimeGame.Sprites
         // The texture to apply to the crate
         Texture2D texture;
 
+        BoundingRectangle box;
+
+        CirclingCamera Camera;
+
         /// <summary>
         /// Creates a new crate instance
         /// </summary>
         /// <param name="game">The game this crate belongs to</param>
         /// <param name="type">The type of crate to use</param>
-        /// <param name="world">The position and orientation of the crate in the world</param>
-        public Crate(Game game, CrateType type, Matrix world)
+        /// <param name="heightSpawn">spawning location of box (1-4)</param>
+        /// <param name="windowWidth">width of window (1-4)</param>
+        public Crate(Game game, CrateType type, int heightSpawn, int windowWidth)
         {
             this.game = game;
             this.texture = game.Content.Load<Texture2D>($"crate{(int)type}_diffuse");
             InitializeEffect();
-            effect.World = world;
+            switch ((heightSpawn - 1) % 4)
+            {
+                case 1:
+                    effect.World = Matrix.CreateTranslation(25, 4.5f, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 10, 30), 1f);
+
+                    box = new BoundingRectangle(windowWidth + 40, 125, 50, 75);
+                    break;
+                case 2:
+                    effect.World = Matrix.CreateTranslation(25, -1.5f, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 0, 30), 1f);
+
+                    box = new BoundingRectangle(windowWidth + 40, 225, 50, 75);
+                    break;
+                case 3:
+                    effect.World = Matrix.CreateTranslation(25, -6, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, -5, 30), 1f);
+
+                    box = new BoundingRectangle(windowWidth + 40, 325, 50, 75);
+                    break;
+
+                default:
+                    effect.World = Matrix.CreateTranslation(25, 10, 0);
+                    Camera = new CirclingCamera(game, new Vector3(0, 15, 30), 1f);
+
+                    box = new BoundingRectangle(windowWidth + 40, 25, 50, 75);
+                    break;
+            }
         }
 
         /// <summary>
@@ -169,6 +202,7 @@ namespace TimeGame.Sprites
         {
             InitializeVertices();
             InitializeIndices();
+            box.LoadContent(content);
         }
 
         /// <summary>
@@ -181,34 +215,22 @@ namespace TimeGame.Sprites
 
             float angle = 2 * (float)gameTime.TotalGameTime.TotalSeconds;
             effect.World = Matrix.CreateRotationY(angle) * Matrix.CreateTranslation(effect.World.Translation);
-        }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            // apply the effect 
-            effect.CurrentTechnique.Passes[0].Apply();
-            // set the vertex buffer
-            game.GraphicsDevice.SetVertexBuffer(vertexBuffer);
-            // set the index buffer
-            game.GraphicsDevice.Indices = indexBuffer;
-            // Draw the triangles
-            game.GraphicsDevice.DrawIndexedPrimitives(
-                PrimitiveType.TriangleList, // Tye type to draw
-                0,                          // The first vertex to use
-                0,                          // The first index to use
-                12                          // the number of triangles to draw
-        );
+            box.X = box.X - (75 * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
+            Camera.Update(gameTime);
         }
 
         /// <summary>
         /// Draws the crate
         /// </summary>
-        /// <param name="camera">The camera to use to draw the crate</param>
-        public void Draw(ICamera camera)
+        /// <param name="gameTime"></param>
+        /// <param name="spriteBatch"></param>
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // set the view and projection matrices
-            effect.View = camera.View;
-            effect.Projection = camera.Projection;
+            effect.View = Camera.View;
+            effect.Projection = Camera.Projection;
             // apply the effect 
             effect.CurrentTechnique.Passes[0].Apply();
             // set the vertex buffer
@@ -221,7 +243,9 @@ namespace TimeGame.Sprites
                 0,                          // The first vertex to use
                 0,                          // The first index to use
                 12                          // the number of triangles to draw
-        );
+            );
+            
+            box.Draw(gameTime, spriteBatch);
         }
     }
 }

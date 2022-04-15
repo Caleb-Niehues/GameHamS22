@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TimeGame.Collisions
 {
@@ -23,7 +25,7 @@ namespace TimeGame.Collisions
         /// <param name="y"></param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param> 
-        public BoundingRectangle(float x, float y, float width, float height)
+        public BoundingRectangle(float x, float y, float width, float height) : this()
         {
             X = x;
             Y = y;
@@ -36,12 +38,21 @@ namespace TimeGame.Collisions
         /// <param name="position"></param>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param> 
-        public BoundingRectangle(Vector2 position, float width, float height)
+        public BoundingRectangle(Vector2 position, float width, float height) : this()
         {
             X = position.X;
             Y = position.Y;
             Width = width;
             Height = height;
+        }
+
+        /// <summary>
+        /// The texture of the sprite
+        /// </summary>
+        Texture2D texture;
+        public void LoadContent(ContentManager content)
+        {
+            texture = content.Load<Texture2D>("PIXEL");
         }
 
         /// <summary>
@@ -52,6 +63,12 @@ namespace TimeGame.Collisions
         public bool CollidesWith(IBounding other)
         {
             return CollisionHelper.Collides(this, other);
+        }
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+            spriteBatch.Draw(texture, new Rectangle((int)X, (int)Y, (int)Width, (int)Height), Color.DarkRed * (float).8);
+            spriteBatch.End();
         }
     }
 }
