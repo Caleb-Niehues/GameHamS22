@@ -49,7 +49,6 @@ namespace TimeGame
         public Tilemap _tilemap;
 
         public List<GruntSprite> enemies;
-
         public List<GruntSprite> deadEnemies;
 
         public List<ChargerSprite> charger;
@@ -163,16 +162,17 @@ namespace TimeGame
                 shotBullets.Add(b);
             }
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 PowerUpSprite p = new PowerUpSprite(new Vector2(64*12, 225), new Vector2(-1,0), 50);
-                powerUps.Add(p);
+                standbyPowerUps.Add(p);
             }
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Crate c = new Crate(this, CrateType.DarkCross, 2, GAME_WIDTH);
-                crates.Add(c);
+                if (i < 1) crates.Add(c);
+                else standbyCrates.Add(c);
             }
 
             gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
@@ -221,7 +221,7 @@ namespace TimeGame
             {
                 b.LoadContent(Content);
             }
-            foreach (PowerUpSprite p in powerUps)
+            foreach (PowerUpSprite p in standbyPowerUps)
             {
                 p.LoadContent(Content);
             }
@@ -229,6 +229,11 @@ namespace TimeGame
             {
                 c.LoadContent(Content);
             }
+            foreach (Crate c in standbyCrates)
+            {
+                c.LoadContent(Content);
+            }
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -311,6 +316,11 @@ namespace TimeGame
                 {
                     riserCheck = 0;
                     difficulty++;
+                    int k = ran.Next(1, 4);
+                    standbyCrates[0].ResetCrate(k);
+                    standbyCrates[0].IsActive = true;
+                    crates.Add(standbyCrates[0]);
+                    standbyCrates.RemoveAt(0);
                 }
                 if (chargerTimer > chargeWaitTime) 
                 {
@@ -376,26 +386,87 @@ namespace TimeGame
                     else player.Up = true;
                 }
                 player.Update(gameTime);
-
-                foreach (Crate c in crates)
+                
+                
+                for (int i = 0; i < powerUps.Count; i++)
                 {
-                    c.Update(gameTime);
-                    if (c.Bounds.CollidesWith(player.Bounds) && c.IsActive)
+                    if (powerUps[i].IsActive)
                     {
-                        lives--;
-                        _soundEffects[4].Play();
-                        c.IsActive = false;
+                        powerUps[i].Update(gameTime);
+                        if (powerUps[i].Bounds.CollidesWith(player.Bounds))
+                        {
+                            lives++;
+                            _soundEffects[6].Play();
+                            powerUps[i].Position = new Vector2(-10, -10);
+                            powerUps[i].IsActive = false;
+
+                            standbyPowerUps.Add(powerUps[i]);
+                            powerUps.RemoveAt(i);
+                            i--;
+                        }
+                        else if (powerUps[i].Bounds.CollidesWith(gameBoundFront))
+                        {
+                            powerUps[i].Position = new Vector2(-10, -10);
+                            powerUps[i].IsActive = false;
+
+                            standbyPowerUps.Add(powerUps[i]);
+                            powerUps.RemoveAt(i);
+                            i--;
+                        }
+
                     }
                 }
-
-                foreach (PowerUpSprite p in powerUps)
+                for (int k = 0; k < crates.Count; k++)
                 {
-                    p.Update(gameTime);
-                    if (p.Bounds.CollidesWith(player.Bounds) && p.IsActive)
+                    if (crates[k].IsActive)
                     {
-                        lives++;
-                        _soundEffects[6].Play();
-                        p.IsActive = false;
+                        crates[k].Update(gameTime);
+                        if (crates[k].Bounds.CollidesWith(player.Bounds))
+                        {
+                            lives--;
+                            _soundEffects[4].Play();
+                            crates[k].IsActive = false;
+                            standbyCrates.Add(crates[k]);
+                            crates.RemoveAt(k);
+                            k--;
+                        }
+                        else if (crates[k].Bounds.CollidesWith(gameBoundFront))
+                        {
+                            crates[k].IsActive = false;
+                            standbyCrates.Add(crates[k]);
+                            crates.RemoveAt(k);
+                            k--;
+                        }
+                        bool dead = false;
+                        for (int j = 0; j < bullets.Count; j++)
+                        {
+                            bullets[j].Update(gameTime);
+                            if (bullets[j].Bounds.CollidesWith(crates[k].Bounds) && !dead)
+                            {
+                                _soundEffects[4].Play();
+                                bullets[j].hitCount -= 1;
+                                if (bullets[j].hitCount <= 0)
+                                {
+                                    bullets[j].Shot = true;
+                                    bullets[j].Position = new Vector2(-10, -10);
+                                    shotBullets.Add(bullets[j]);
+                                    bullets.RemoveAt(j);
+                                    if (j > 0) j--;
+                                }
+                                dead = true;
+                            }
+                        }
+                        if (dead)
+                        {
+                            crates[k].IsActive = false;
+                            standbyPowerUps[0].Position = new Vector2(crates[k].Bounds.X, crates[k].Bounds.Y);
+                            powerUps.Add(standbyPowerUps[0]);
+                            standbyPowerUps.RemoveAt(0);
+                            standbyCrates.Add(crates[k]);
+                            crates.RemoveAt(k);
+                            
+                            k--;
+                        }
                     }
                 }
 
@@ -427,6 +498,7 @@ namespace TimeGame
                             i--;
                         }
                         
+                        
                     }
                     if (i < 0) i = 0;
                     bool dead = false;
@@ -447,6 +519,7 @@ namespace TimeGame
                             dead = true;
 
                         }
+                        
 
                         else if((bullets[j].Bounds.CollidesWith(gameBoundTop) || bullets[j].Bounds.CollidesWith(gameBoundBack) 
                             || bullets[j].Bounds.CollidesWith(gameBoundFront) || bullets[j].Bounds.CollidesWith(gameBoundBottom)))
@@ -456,7 +529,9 @@ namespace TimeGame
                             bullets.RemoveAt(j);
                             if(j > 0) j--;
                         }
+
                         
+
                     }
                     for (int j = 0; j < charger.Count; j++)
                     {
@@ -555,8 +630,7 @@ namespace TimeGame
             }
             foreach (PowerUpSprite p in powerUps)
             {
-                if(p.IsActive)
-                    p.Draw(gameTime, _spriteBatch);
+                 p.Draw(gameTime, _spriteBatch);
             }
             switch (state)
             {
@@ -606,5 +680,7 @@ namespace TimeGame
                 shotBullets.RemoveAt(0);
             }
         }
+
+        
     }
 }

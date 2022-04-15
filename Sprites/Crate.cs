@@ -271,7 +271,7 @@ namespace TimeGame.Sprites
                 IsActive = false;
                 //ResetCrate(_heightSpawn);
             }
-
+            
             Camera.Update(gameTime);
         }
 
