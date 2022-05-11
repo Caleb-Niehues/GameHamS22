@@ -25,50 +25,7 @@ namespace TimeGame
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _gameFont;
-
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
-
-        private GameState state = GameState.InPlay;
-        private int lives = 3;
-        private int scoreBucket;
-        private int score;
-        private int costModifier = 5;
-        private int[] upgrades = { 1, 1, 1, 1 };
-        ////private int[] powerUp = { 0, 100, 100, 100 };
-        //private bool hasBeenHit = false;
-        //MouseState currentMouse;
-        private KeyboardState keyboardState;
-        private KeyboardState previousKeyboard;
-
-        public float bulletRot;
-        public Vector2 bulletDir;
-
-        public PlayerSprite player;
-        public Tilemap _tilemap;
-
-        public List<GruntSprite> enemies;
-        public List<GruntSprite> deadEnemies;
-
-        public List<ChargerSprite> charger;
-        public List<ChargerSprite> chargerStandby;
-
-        public List<PowerUpSprite> powerUps;
-        public List<PowerUpSprite> standbyPowerUps;
-
-        public List<Crate> crates;
-        public List<Crate> standbyCrates;
-
-        public double gunTimer = 0;
-        public double shootTime = 2.0;
-
-        public int difficulty = 2;
-        private double riserCheck;
-
-        public List<Bullet> bullets;
-        public List<Bullet> shotBullets;
-
-        public Random ran = new Random();
-
         /// <summary>
         /// The width of the game world
         /// </summary>
@@ -79,14 +36,69 @@ namespace TimeGame
         /// </summary>
         public static int GAME_HEIGHT = 64 * 8;
 
-        public BoundingRectangle gameBoundTop;
-        public BoundingRectangle gameBoundBottom;
-        public BoundingRectangle gameBoundFront;
-        public BoundingRectangle gameBoundBack;
+        private void NewGame()
+        {
+            state = GameState.InPlay;
+            lives = 3;
+            score = 0;
+            scoreBucket = 0;
+            for (int i = 0; i < upgrades.Length; i++)
+                upgrades[i] = 0;
+            //reset keyboardStates
+            gunTimer = 0;
+            shootTime = 2;
+            difficulty = 2;
+            chargerTimer = 0;
+            ran = new Random();
 
-        public double chargerTimer = 0;
-        public double chargeWaitTime = 4.5;//a lot of these need to get moved from new item declaration to Initialize()
-        public Leaderboard Leaderboard;
+            player = new PlayerSprite();
+            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
+        }
+
+        GameState state;
+        int lives;
+        int scoreBucket;
+        int score;
+        double gunTimer;
+        double shootTime;
+        int difficulty;
+        double riserCheck;
+        double chargerTimer;
+        Random ran;
+        int costModifier = 5;
+        int[] upgrades = { 1, 1, 1, 1 };
+        double chargerWaitTime = 4.5;
+
+        KeyboardState keyboardState;
+        KeyboardState previousKeyboard;
+
+        float bulletRot;
+        Vector2 bulletDir;
+
+        PlayerSprite player;
+        Tilemap _tilemap;
+
+        List<GruntSprite> enemies;
+        List<GruntSprite> deadEnemies;
+
+        List<ChargerSprite> charger;
+        List<ChargerSprite> chargerStandby;
+
+        List<PowerUpSprite> powerUps;
+        List<PowerUpSprite> standbyPowerUps;
+
+        List<Crate> crates;
+        List<Crate> standbyCrates;
+
+        List<Bullet> bullets;
+        List<Bullet> shotBullets;
+
+        BoundingRectangle gameBoundTop;
+        BoundingRectangle gameBoundBottom;
+        BoundingRectangle gameBoundFront;
+        BoundingRectangle gameBoundBack;
+
+        Leaderboard Leaderboard;
 
         Matrix translation = new Matrix();
         double translationTimer;
@@ -113,8 +125,7 @@ namespace TimeGame
         /// </summary>
         protected override void Initialize()
         {
-            player = new PlayerSprite();
-            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
+            NewGame();
 
             enemies = new List<GruntSprite>();
             deadEnemies = new List<GruntSprite>();
@@ -327,7 +338,7 @@ namespace TimeGame
                     standbyCrates.RemoveAt(0);
                 }
 
-                if (chargerTimer > chargeWaitTime) //break me into a helper method - private void handleCharger(chargerTime, chargerWaitTime)
+                if (chargerTimer > chargerWaitTime) //break me into a helper method - private void handleCharger(chargerTime, chargerWaitTime)
                 {
                     chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
                     chargerStandby[0].pokeTimer = 0;
