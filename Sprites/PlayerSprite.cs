@@ -14,7 +14,9 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
-        public PlayerSprite()
+        private GraphicsDeviceManager _graphics;
+        private TimeGame tg;
+        public PlayerSprite(TimeGame TG, GraphicsDeviceManager graphics)
         {
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
@@ -24,6 +26,9 @@ namespace TimeGame.Sprites
             Arms[1] = new Shotgun(Position, new Vector2(32, 39));
             Arms[2] = new Sniper(Position, new Vector2(32, 39));
             armIndex = 0;
+
+            tg = TG;
+            _graphics = graphics;
         }
 
         private MouseState mouseState;
@@ -148,7 +153,7 @@ namespace TimeGame.Sprites
             Arms[armIndex].BodyPosition = Position;
             Arms[armIndex].ArmPowerUp = powerUp;
             
-            Arms[armIndex].Update(gameTime);
+            Arms[armIndex].Update(gameTime, (_graphics.PreferredBackBufferWidth / tg.virtualWidth), (_graphics.PreferredBackBufferHeight / tg.virtualHeight));
         }
 
 
