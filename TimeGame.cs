@@ -55,6 +55,9 @@ namespace TimeGame
         public List<PowerUpSprite> powerUps;
         public List<PowerUpSprite> standbyPowerUps;
 
+        public List<DaBaby> baby;
+        public List<DaBaby> sleepingBaby;
+
         public List<Crate> crates;
         public List<Crate> standbyCrates;
 
@@ -131,6 +134,9 @@ namespace TimeGame
             crates = new List<Crate>();
             standbyCrates = new List<Crate>();
 
+            baby = new List<DaBaby>();
+            sleepingBaby = new List<DaBaby>();
+
             Leaderboard = new Leaderboard();
             Leaderboard.Load();
 
@@ -153,6 +159,12 @@ namespace TimeGame
                     ene.Alive = false;
                     deadEnemies.Add(ene);
                 }
+            }
+
+            for(int i = 0; i < 5; i++)
+            {
+                DaBaby b = new DaBaby();
+                sleepingBaby.Add(b);
             }
 
             for (int i = 0; i < 50; i++)
@@ -203,7 +215,10 @@ namespace TimeGame
             // [6] = Powerup Gained
             _soundEffects.Add(Content.Load<SoundEffect>("Sounds/SFX_Powerup_34"));
 
-
+            foreach(DaBaby d in sleepingBaby)
+            {
+                d.LoadContent(this.Content);
+            }
             foreach (GruntSprite e in enemies)
             {
                 e.LoadContent(this.Content);
@@ -392,6 +407,7 @@ namespace TimeGame
                     if (player.Up) player.Up = false;
                     else player.Up = true;
                 }
+                
 
                 player.Update(gameTime);//maybe move to take care of sequencing?
                 
@@ -400,7 +416,7 @@ namespace TimeGame
                     if (powerUps[i].IsActive)
                     {
                         powerUps[i].Update(gameTime);
-                        if (powerUps[i].Bounds.CollidesWith(player.Bounds))
+                        if (powerUps[i].Bounds.CollidesWith(player.Bounds)) // && !powerUps[i].IsColliding
                         {
                             lives++;
                             _soundEffects[6].Play();
