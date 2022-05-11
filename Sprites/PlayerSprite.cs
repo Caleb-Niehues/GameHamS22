@@ -82,7 +82,7 @@ namespace TimeGame.Sprites
 
         public void Bounce()
         {
-            Position.Y = Math.Clamp(Position.Y, 0, 448);
+            Position.Y = Math.Clamp(Position.Y, 0, 448); // Sidewalk bounce issue
             direction.Y *= -1;
         }
 
@@ -151,6 +151,13 @@ namespace TimeGame.Sprites
             Arms[armIndex].Update(gameTime);
         }
 
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.X + 38, (int)bounds.Y + 32, (int)bounds.Width + 10, (int)bounds.Height + 20), Color.DarkRed * (float).8);
+        }
+
 
         private short powerUp;
         /// <summary>
@@ -178,6 +185,7 @@ namespace TimeGame.Sprites
             var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
             Arms[armIndex].Draw(gameTime, spriteBatch);
+            Debug(gameTime, spriteBatch);
         }
 
         

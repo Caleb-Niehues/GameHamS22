@@ -85,6 +85,13 @@ namespace TimeGame.Sprites
             bounds.Center.Y = Position.Y + pixelHeight /2;
         }
 
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.Center.X - (bounds.Radius / 2), (int)bounds.Center.Y - (bounds.Radius / 2), bounds.Radius, bounds.Radius), Color.DarkRed * (float).8);
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             //Update animation frame
@@ -103,6 +110,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
+            Debug(gameTime, spriteBatch);
             spriteBatch.Draw(texture, Position, source, Color);
         }
     }

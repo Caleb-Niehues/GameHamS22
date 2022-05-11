@@ -28,8 +28,8 @@ namespace TimeGame.Sprites
         public double peakTimer = 0;
         public double peakTiming = 1;
 
-        private BoundingCircle bounds = new BoundingCircle(new Vector2(50 - 16, 200 - 16), 16);
-        public BoundingCircle Bounds => bounds;
+        private BoundingRectangle bounds;
+        public BoundingRectangle Bounds => bounds;
 
         private int speed;
         public int Speed
@@ -44,10 +44,11 @@ namespace TimeGame.Sprites
             pixelWidth = 128;
             pixelHeight = 96;
             Color = Color.White;
-            speed = 300;
+            speed = 20;
             pokeTimer = 0;
+            bounds = new BoundingRectangle(50 - 16, 200 - 16, pixelWidth, pixelHeight);
             Random r = new Random();
-            Position = new Vector2(-64, r.Next(128, TimeGame.GAME_HEIGHT - 128));
+            Position = new Vector2(-64, r.Next(64, TimeGame.GAME_HEIGHT - 64));
         } 
 
         public override void LoadContent(ContentManager content)
@@ -83,8 +84,15 @@ namespace TimeGame.Sprites
                 }
             }
             
-            bounds.Center.X = Position.X - 16;
-            bounds.Center.Y = Position.Y - 16;
+            bounds.X = Position.X - 32;
+            bounds.Y = Position.Y;
+        }
+
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.X, (int)bounds.Y, (int)bounds.Width, (int)bounds.Height), Color.DarkRed * (float).8);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -102,6 +110,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
+            Debug(gameTime, spriteBatch);
             spriteBatch.Draw(texture, Position, source, Color, 0, new Vector2(0,0), 1, SpriteEffects.FlipHorizontally, 0);
         }
     }
