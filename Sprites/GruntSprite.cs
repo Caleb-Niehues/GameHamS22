@@ -27,8 +27,6 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -37,17 +35,20 @@ namespace TimeGame.Sprites
             get => direction;
             set => direction = value;
         }
-        public GruntSprite(Vector2 position, PlayerSprite p)
+
+        public GruntSprite(Vector2 position, PlayerSprite p, Texture2D texture)
         {
+            if(texture != null)
+                this.texture = texture;
             Position = position;
             player = p;
-            Random r = new Random(); 
-            speed = r.Next(50,125);
+            Random r = new Random();
+            speed = r.Next(50, 125);
             Color = Color.White;
             direction = new Vector2(1, 0);
             pixelHeight = 64;
             pixelWidth = 64;
-            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth /2, Position.Y + pixelHeight /2), pixelWidth);
+            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth / 2, Position.Y + pixelHeight / 2), pixelWidth);
         }
 
         public override void LoadContent(ContentManager content)
@@ -67,16 +68,10 @@ namespace TimeGame.Sprites
             else 
                 y = 0;
 
-
-
             if (Position.Y > player.Position.Y && y != 0)
                 y = -1;
             else if(y != 0)
                 y = 1;
-
-
-
-
 
             Direction = new Vector2(x, y);
 

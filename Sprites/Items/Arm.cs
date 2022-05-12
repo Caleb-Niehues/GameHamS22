@@ -11,7 +11,6 @@ namespace TimeGame.Sprites.Items
     {
         protected Vector2 velocity;
         protected Vector2 acceleration;
-        float accelerationTimer;
         protected float rotationdir = 0;
         protected float rotationspeed = 0;
 

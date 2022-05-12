@@ -14,18 +14,19 @@ namespace TimeGame
 {
     public enum GameState
     {
-        BetweenGames, //useful for having options screen and ability to exit game
         InPlay,
         Pause, //used for the menu/pause screen
-        Lost
+        GameOver
     }
 
     public class TimeGame : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _gameFont;
-        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
+        #region Variables and Constructor
+        GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
+        SpriteFont _gameFont;
+        List<SoundEffect> _soundEffects = new List<SoundEffect>();
+
         /// <summary>
         /// The width of the game world
         /// </summary>
@@ -36,44 +37,20 @@ namespace TimeGame
         /// </summary>
         public static int GAME_HEIGHT = 64 * 8;
 
-        private void NewGame()
-        {
-            state = GameState.InPlay;
-            lives = 3;
-            score = 0;
-            scoreBucket = 0;
-            for (int i = 0; i < upgrades.Length; i++)
-                upgrades[i] = 0;
-            //reset keyboardStates
-            gunTimer = 0;
-            shootTime = 2;
-            difficulty = 2;
-            chargerTimer = 0;
-            ran = new Random();
+        BoundingRectangle gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
+        BoundingRectangle gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
+        BoundingRectangle gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
+        BoundingRectangle gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH, 0, 1, GAME_HEIGHT);
 
-            player = new PlayerSprite();
-            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
-        }
-
-        GameState state;
-        int lives;
-        int scoreBucket;
-        int score;
-        double gunTimer;
-        double shootTime;
-        int difficulty;
-        double riserCheck;
-        double chargerTimer;
-        Random ran;
-        int costModifier = 5;
-        int[] upgrades = { 1, 1, 1, 1 };
-        double chargerWaitTime = 4.5;
+        public bool HasBeenInitialized = false;
 
         KeyboardState keyboardState;
         KeyboardState previousKeyboard;
 
-        float bulletRot;
-        Vector2 bulletDir;
+        Leaderboard Leaderboard;
+
+        Matrix translation = new Matrix();
+        double translationTimer;
 
         PlayerSprite player;
         Tilemap _tilemap;
@@ -93,15 +70,22 @@ namespace TimeGame
         List<Bullet> bullets;
         List<Bullet> shotBullets;
 
-        BoundingRectangle gameBoundTop;
-        BoundingRectangle gameBoundBottom;
-        BoundingRectangle gameBoundFront;
-        BoundingRectangle gameBoundBack;
+        int lives;
+        int score;
+        int scoreBucket;
+        double gunTimer;
+        double shootTime;
+        int difficulty;
+        double difficultyTimer;
+        double chargerTimer;
+        float bulletRot;
+        Vector2 bulletDir;
 
-        Leaderboard Leaderboard;
-
-        Matrix translation = new Matrix();
-        double translationTimer;
+        GameState state = GameState.InPlay;
+        int costModifier = 5;
+        int[] upgrades = { 1, 1, 1, 1 };
+        double chargerWaitTime = 4.5;
+        Random ran = new Random();
 
         public TimeGame()
         {
@@ -119,80 +103,9 @@ namespace TimeGame
             Lost.Width = GAME_HEIGHT;
             Window.Title = "Gun Runner";
         }
+        #endregion
 
-        /// <summary>
-        /// can also be used for restart
-        /// </summary>
-        protected override void Initialize()
-        {
-            NewGame();
-
-            enemies = new List<GruntSprite>();
-            deadEnemies = new List<GruntSprite>();
-
-            charger = new List<ChargerSprite>();
-            chargerStandby = new List<ChargerSprite>();
-
-            bullets = new List<Bullet>();
-            shotBullets = new List<Bullet>();
-
-            powerUps = new List<PowerUpSprite>();
-            standbyPowerUps = new List<PowerUpSprite>();
-
-            crates = new List<Crate>();
-            standbyCrates = new List<Crate>();
-
-            Leaderboard = new Leaderboard();
-            Leaderboard.Load();
-
-            for(int i = 0; i < 10; i++)
-            {
-                ChargerSprite charge = new ChargerSprite();
-                chargerStandby.Add(charge);
-            }
-
-            Random r = new Random();
-            for (int i = 0; i < 10; i++)
-            {
-                int outerBounds = GAME_WIDTH + 60;
-                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                GruntSprite ene = new GruntSprite(pos, player);
-                if (i < difficulty)
-                    enemies.Add(ene);
-                else
-                {
-                    ene.Alive = false;
-                    deadEnemies.Add(ene);
-                }
-            }
-
-            for (int i = 0; i < 50; i++)
-            {
-                Bullet b = new Bullet();
-                shotBullets.Add(b);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                PowerUpSprite p = new PowerUpSprite(new Vector2(64*12, 225), new Vector2(-1,0), 50);
-                standbyPowerUps.Add(p);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                Crate c = new Crate(this, CrateType.DarkCross, 2, GAME_WIDTH);
-                if (i < 1) crates.Add(c);
-                else standbyCrates.Add(c);
-            }
-
-            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
-            gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
-            gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH,0,1,GAME_HEIGHT);
-
-            base.Initialize();
-        }
-
+        #region New Game Methods
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -247,9 +160,161 @@ namespace TimeGame
         }
 
         /// <summary>
-        /// 
+        /// can also be used for restart
         /// </summary>
-        /// <param name="gameTime"></param>
+        protected override void Initialize()
+        {
+            NewGame();
+            HasBeenInitialized = true;
+            base.Initialize();
+        }
+
+        /// <summary>
+        /// Used in initializing original game, as well as restarting
+        /// </summary>
+        private void NewGame()
+        {
+            state = GameState.InPlay;
+            lives = 3;
+            score = 0;
+            scoreBucket = 0;
+            for (int i = 0; i < upgrades.Length; i++)
+                upgrades[i] = 1;
+            keyboardState = new KeyboardState();
+            previousKeyboard = new KeyboardState();
+            gunTimer = 0;
+            shootTime = 2;
+            difficulty = 2;
+            chargerTimer = 0;
+            ran = new Random();
+
+            Texture2D[] armTextures = new Texture2D[3];
+            if (HasBeenInitialized)
+            {
+                armTextures[0] = player.Arms[0].Texture;
+                armTextures[1] = player.Arms[1].Texture;
+                armTextures[2] = player.Arms[2].Texture;
+                player = new PlayerSprite(player.Texture, armTextures);
+            }
+            else
+            {
+                armTextures[0] = null;
+                armTextures[1] = null;
+                armTextures[2] = null;
+                player = new PlayerSprite(null, armTextures);
+                _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
+            }
+
+            Leaderboard = new Leaderboard();
+            Leaderboard.Load();
+
+            NewGruntsHelper();
+            NewChargersHelper();
+            NewBulletsHelper();
+            NewPowerUpsHelper();
+            NewCratesHelper();
+        }
+
+        private void NewGruntsHelper()
+        {
+            Random r = new Random();
+            GruntSprite ene;
+            Texture2D texture = null;
+            if (HasBeenInitialized)
+                texture = enemies[0].Texture;
+            enemies = new List<GruntSprite>();
+            deadEnemies = new List<GruntSprite>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                int outerBounds = GAME_WIDTH + 60;
+                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
+                ene = new GruntSprite(pos, player, texture);
+                if (i < difficulty)
+                    enemies.Add(ene);
+                else
+                {
+                    ene.Alive = false;
+                    deadEnemies.Add(ene);
+                }
+            }
+        }
+
+        private void NewChargersHelper()
+        {
+            Texture2D texture = null;
+            List<SoundEffect> sounds = null;
+            if (HasBeenInitialized)
+            {
+                texture = chargerStandby[0].Texture;
+                sounds = chargerStandby[0].SoundEffects;
+            }
+            charger = new List<ChargerSprite>();
+            chargerStandby = new List<ChargerSprite>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                ChargerSprite charge = new ChargerSprite(texture, sounds);
+                chargerStandby.Add(charge);
+            }
+        }
+
+        private void NewBulletsHelper()
+        {
+            Texture2D texture = null;
+            if (HasBeenInitialized) //could trip if there are no bullets
+                texture = shotBullets[0].Texture;
+            bullets = new List<Bullet>();
+            shotBullets = new List<Bullet>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                Bullet b = new Bullet(texture);
+                shotBullets.Add(b);
+            }
+        }
+
+        private void NewPowerUpsHelper()
+        {
+            Texture2D texture = null;
+            if (HasBeenInitialized)
+                texture = standbyCrates[0].Texture;
+            powerUps = new List<PowerUpSprite>();
+            standbyPowerUps = new List<PowerUpSprite>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                PowerUpSprite p = new PowerUpSprite(new Vector2(64 * 12, 225), new Vector2(-1, 0), 50, texture);
+                standbyPowerUps.Add(p);
+            }
+        }
+
+        private void NewCratesHelper()
+        {
+            if (HasBeenInitialized)
+            {
+                foreach (Crate crate in crates)
+                {
+                    crate.ResetCrate();   
+                    standbyCrates.Add(crate);
+                }
+                crates.Clear();
+            }
+            else
+            {
+                crates = new List<Crate>();
+                standbyCrates = new List<Crate>();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    Crate c = new Crate(this, CrateType.DarkCross, 2, GAME_WIDTH);
+                    if (i < 1) crates.Add(c);
+                    else standbyCrates.Add(c);
+                }
+            }
+        }
+        #endregion
+
         protected override void Update(GameTime gameTime)
         {
             previousKeyboard = keyboardState;
@@ -262,9 +327,8 @@ namespace TimeGame
                     case GameState.Pause:
                         state = GameState.InPlay;
                         break;
-                    case GameState.Lost:
-                        //Exit(); //replace with restart?
-                        Initialize();//need to make some changes and cleanup variable initializiation
+                    case GameState.GameOver:
+                        NewGame();
                         break;
                     default:
                         lives--;
@@ -274,9 +338,9 @@ namespace TimeGame
                 }
             }
 
-            if (lives < 1 && state != GameState.Lost)//maybe move this to gameplay?
+            if (lives < 1 && state != GameState.GameOver)//maybe move this to gameplay?
             {
-                state = GameState.Lost;
+                state = GameState.GameOver;
                 UpdateLeaderboard(Environment.UserName, score);//could this move to the lose section?
             }
             else if (state == GameState.Pause) //logic for upgrades go here
@@ -326,10 +390,10 @@ namespace TimeGame
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 //currentMouse = Mouse.GetState();
                 
-                riserCheck += gameTime.ElapsedGameTime.TotalSeconds / 15;//combine with scoring at bottom into helper method - handleScoring
-                if (riserCheck > difficulty && difficulty < 50)
+                difficultyTimer += gameTime.ElapsedGameTime.TotalSeconds / 15;//combine with scoring at bottom into helper method - handleScoring
+                if (difficultyTimer > difficulty && difficulty < 50)
                 {
-                    riserCheck = 0;
+                    difficultyTimer = 0;
                     difficulty++;
                     int k = ran.Next(1, 4);
                     standbyCrates[0].ResetCrate(k);
@@ -685,10 +749,8 @@ namespace TimeGame
                 case GameState.Pause:
                     Pause.Draw(_spriteBatch, score, upgrades);
                     break;
-                case GameState.Lost:
+                case GameState.GameOver:
                     Lost.Draw(_spriteBatch, Leaderboard);
-                    break;
-                case GameState.BetweenGames:
                     break;
                 case GameState.InPlay:
                     _spriteBatch.DrawString(_gameFont, "Score: " + score, new Vector2(2, 20), Color.Black);

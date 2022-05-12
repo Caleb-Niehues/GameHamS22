@@ -14,15 +14,17 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
-        public PlayerSprite()
+        public PlayerSprite(Texture2D texture, Texture2D[] armTextures)
         {
+            if (texture != null)
+                this.texture = texture;
+            Arms[0] = new Pistol(Position, new Vector2(32, 39), armTextures[0]);
+            Arms[1] = new Shotgun(Position, new Vector2(32, 39), armTextures[1]);
+            Arms[2] = new Sniper(Position, new Vector2(32, 39), armTextures[2]);
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
             this.pixelHeight = 128;
             bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 40, pixelHeight - 32);
-            Arms[0] = new StartingGun(Position, new Vector2(32, 39));
-            Arms[1] = new Shotgun(Position, new Vector2(32, 39));
-            Arms[2] = new Sniper(Position, new Vector2(32, 39));
             armIndex = 0;
         }
 
@@ -50,7 +52,6 @@ namespace TimeGame.Sprites
 
         public float GetRotation()
         {
-
             return this.Arms[0].GetRot();
         }
 
@@ -93,8 +94,8 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Player");
-            foreach(Arm arm in Arms)
-            arm.LoadContent(content);
+            foreach (Arm arm in Arms)
+                arm.LoadContent(content);
         }
 
         /// <summary>

@@ -20,6 +20,8 @@ namespace TimeGame.Sprites
 
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
 
+        public List<SoundEffect> SoundEffects => _soundEffects;
+
         public double pokeTimer = 0;
         public double pokeTiming = 1.5;
         public bool hasPlayed = false;
@@ -38,8 +40,13 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
-        public ChargerSprite()
+        public ChargerSprite(Texture2D texture, List<SoundEffect> sounds)
         {
+            if (texture != null && sounds != null)
+            {
+                this.texture = texture;
+                this._soundEffects = sounds;
+            }
             direction = new Vector2(1, 1);
             pixelWidth = 128;
             pixelHeight = 96;

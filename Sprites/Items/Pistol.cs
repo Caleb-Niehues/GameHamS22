@@ -9,28 +9,27 @@ using System.Diagnostics;
 
 namespace TimeGame.Sprites.Items
 {
-    public class StartingGun : Arm
+    public class Pistol : Arm
     {
-
-        //private Texture2D texture2;
-
-     
-        public StartingGun(Vector2 position, Vector2 origin)
+        public Pistol(Vector2 position, Vector2 origin, Texture2D texture)
         {
+            if(texture != null)
+                this.texture = texture;
             BodyOrigin = origin;
             BodyPosition = position;
             this.Position = BodyPosition + BodyOrigin;
             this.pixelWidth = 64;
             this.pixelHeight = 16;
         }
+
         public void CalculateBarrel()
         {
             this.BarrelEnd = this.Position + new Vector2((pixelWidth - this.pixelHeight / 2) * (float)Math.Cos(rotationdir), (pixelWidth - this.pixelHeight / 2) * (float)Math.Sin(rotationdir));
         }
+
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("ArmPistol");
-            //texture2 = content.Load<Texture2D>("PIXEL");
         }
 
         public override void Update(GameTime gameTime)
@@ -42,6 +41,7 @@ namespace TimeGame.Sprites.Items
             //Debug.WriteLine(rotationdir);
             CalculateBarrel();
         }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var source = new Rectangle(0, ArmPowerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
