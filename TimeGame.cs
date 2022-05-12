@@ -81,11 +81,12 @@ namespace TimeGame
         float bulletRot;
         Vector2 bulletDir;
 
+        Random ran = new Random();
         GameState state = GameState.InPlay;
+        bool buttonReset = false;
         int costModifier = 5;
         int[] upgrades = { 1, 1, 1, 1 };
         double chargerWaitTime = 4.5;
-        Random ran = new Random();
 
         public TimeGame()
         {
@@ -180,8 +181,8 @@ namespace TimeGame
             scoreBucket = 0;
             for (int i = 0; i < upgrades.Length; i++)
                 upgrades[i] = 1;
-            keyboardState = new KeyboardState();
-            previousKeyboard = new KeyboardState();
+            keyboardState = new KeyboardState(Keys.Enter);
+            previousKeyboard = new KeyboardState(Keys.Enter);
             gunTimer = 0;
             shootTime = 2;
             difficulty = 2;
@@ -278,7 +279,7 @@ namespace TimeGame
         {
             Texture2D texture = null;
             if (HasBeenInitialized)
-                texture = standbyCrates[0].Texture;
+                texture = standbyPowerUps[0].Texture;
             powerUps = new List<PowerUpSprite>();
             standbyPowerUps = new List<PowerUpSprite>();
 
@@ -328,12 +329,18 @@ namespace TimeGame
                         state = GameState.InPlay;
                         break;
                     case GameState.GameOver:
+                        buttonReset = true;
                         NewGame();
                         break;
                     default:
-                        lives--;
-                        _soundEffects[5].Play();
-                        state = GameState.Pause;
+                        if (buttonReset)
+                            buttonReset = !buttonReset;
+                        else
+                        {
+                            lives--;
+                            _soundEffects[5].Play();
+                            state = GameState.Pause;
+                        }
                         break;
                 }
             }

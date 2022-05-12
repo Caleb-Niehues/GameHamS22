@@ -14,6 +14,11 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
+        /// <summary>
+        /// A constrcutor that can alos be used to reset a player sprite
+        /// </summary>
+        /// <param name="texture">The texture used to draw the player, used to remember the texture when used as a reset - if null, it is assumed to be handled by LoadContent</param>
+        /// <param name="armTextures">The various textures used for the gun arms constructors</param>
         public PlayerSprite(Texture2D texture, Texture2D[] armTextures)
         {
             if (texture != null)
