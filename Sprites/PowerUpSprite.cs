@@ -25,8 +25,10 @@ namespace TimeGame.Sprites
         /// <param name="position"></param>
         /// <param name="xDirection"></param>
         /// <param name="yDirection"></param>
-        public PowerUpSprite(Vector2 position, Vector2 direction, int speed)
+        public PowerUpSprite(Vector2 position, Vector2 direction, int speed, Texture2D texture)
         {
+            if (texture != null)
+                this.texture = texture;
             this.pixelWidth = 47;
             this.bounds = new BoundingCircle(position - new Vector2(pixelWidth, pixelWidth), pixelWidth);
             this.Position = position;
