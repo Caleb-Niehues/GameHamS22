@@ -23,6 +23,7 @@ namespace TimeGame.Sprites.Items
         private BoundingRectangle bounds;
         public BoundingRectangle Bounds => bounds;
         public bool bounceX = false;
+        public bool bounceY = false;
 
         private int speed;
         public int Speed
@@ -67,7 +68,15 @@ namespace TimeGame.Sprites.Items
             {
                 direction.X = 1;
             }
-            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
+            else direction.X = -1;
+            if (bounceY)
+            {
+                direction.Y = 1;
+            }
+            else direction.Y = -1;
+
+
+            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
             bounds.X = Position.X - 16;
             bounds.Y = Position.Y - 32;
         }

@@ -70,6 +70,10 @@ namespace TimeGame
         public List<Bullet> bullets;
         public List<Bullet> shotBullets;
 
+        public bool babyActive = false;
+        public bool babyLeaving = false;
+        public bool babyEntered = false;
+
         public Random ran = new Random();
 
         /// <summary>
@@ -89,6 +93,7 @@ namespace TimeGame
 
         public double chargerTimer = 0;
         public double chargeWaitTime = 4.5;//a lot of these need to get moved from new item declaration to Initialize()
+        public double babyTimer = 0;
         public Leaderboard Leaderboard;
 
         Matrix translation = new Matrix();
@@ -328,6 +333,7 @@ namespace TimeGame
             {
                 chargerTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 gunTimer += gameTime.ElapsedGameTime.TotalSeconds;
+                babyTimer += gameTime.ElapsedGameTime.TotalSeconds;
                 //currentMouse = Mouse.GetState();
                 
                 riserCheck += gameTime.ElapsedGameTime.TotalSeconds / 15;//combine with scoring at bottom into helper method - handleScoring
@@ -341,7 +347,20 @@ namespace TimeGame
                     crates.Add(standbyCrates[0]);
                     standbyCrates.RemoveAt(0);
                 }
-
+                if(babyTimer > 15 && !babyActive)
+                {
+                    babyActive = true;
+                    babyTimer = 0;
+                    sleepingBaby[0].bounceX = false;
+                    sleepingBaby[0].Position = new Vector2(1000, ran.Next(128, GAME_HEIGHT - 128));
+                    sleepingBaby[0].Speed = 50;
+                    baby.Add(sleepingBaby[0]);
+                    sleepingBaby.RemoveAt(0);
+                }
+                if(babyTimer > 30 && babyActive)
+                {
+                    babyLeaving = true;
+                }
                 if (chargerTimer > chargeWaitTime) //break me into a helper method - private void handleCharger(chargerTime, chargerWaitTime)
                 {
                     chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
@@ -410,6 +429,44 @@ namespace TimeGame
                 
 
                 player.Update(gameTime);//maybe move to take care of sequencing?
+
+                for(int i = 0; i < baby.Count; i++)
+                {
+                    baby[i].Update(gameTime);
+                    if (baby[i].Bounds.CollidesWith(player.Bounds))
+                    {
+                        lives--;
+                        baby[i].Position = new Vector2(-10, -10);
+                        sleepingBaby.Add(baby[i]);
+                        baby.RemoveAt(i);
+                        babyTimer = 0;
+                        i--;
+                    }
+                    if(baby[i].Position.X > GAME_WIDTH && !babyEntered) 
+                    {
+                        babyEntered = true;
+                    }
+                    if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving  && babyEntered)
+                    {
+                        if (baby[i].bounceY) baby[i].bounceY = false;
+                        else baby[i].bounceY = true;
+                        baby[i].Speed += 5;
+                    }
+                    if((baby[i].Position.X < 0 || baby[i].Position.X > GAME_WIDTH) && !babyLeaving && babyEntered)
+                    {
+                        if (baby[i].bounceX) baby[i].bounceX = false;
+                        else baby[i].bounceX = true;
+                        baby[i].Speed += 5;
+                    }
+                    
+                    if((baby[i].Position.Y < -64 || baby[i].Position.Y > GAME_HEIGHT + 64 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
+                    {
+                        sleepingBaby.Add(baby[i]);
+                        baby.RemoveAt(i);
+                        babyTimer = 0;
+                        i--;
+                    }
+                }
                 
                 for (int i = 0; i < powerUps.Count; i++)//helper method?
                 {
@@ -667,6 +724,10 @@ namespace TimeGame
             {
                 if (e.Alive)
                     e.Draw(gameTime, _spriteBatch);
+            }
+            foreach (DaBaby b in baby)
+            {
+                b.Draw(gameTime, _spriteBatch);
             }
             foreach (ChargerSprite c in charger)
             {
