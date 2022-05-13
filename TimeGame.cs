@@ -441,7 +441,8 @@ namespace TimeGame
                         baby.RemoveAt(i);
                         babyTimer = 0;
                         babyEntered = false;
-                        i--;
+                        state = GameState.Pause;
+                        if(i > 0) i--;
                     }
                     if(baby[i].Position.X < GAME_WIDTH && !babyEntered) 
                     {

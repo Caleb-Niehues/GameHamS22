@@ -43,16 +43,8 @@ namespace TimeGame.Sprites.Items
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            animationTime += gameTime.ElapsedGameTime.TotalSeconds;
-            if(animationTime > .3)
-            {
-                animationFrame++;
-                animationTime = 0;
-            }
-            if(animationFrame > 2)
-            {
-                animationFrame = 0;
-            }
+            animationFrame = 0;
+            
 
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
