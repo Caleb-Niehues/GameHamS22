@@ -353,7 +353,7 @@ namespace TimeGame
                     babyTimer = 0;
                     sleepingBaby[0].bounceX = false;
                     sleepingBaby[0].Position = new Vector2(500, ran.Next(128, GAME_HEIGHT - 128));
-                    sleepingBaby[0].Speed = 50;
+                    sleepingBaby[0].Speed = 75;
                     baby.Add(sleepingBaby[0]);
                     sleepingBaby.RemoveAt(0);
                 }
@@ -430,44 +430,48 @@ namespace TimeGame
 
                 player.Update(gameTime);//maybe move to take care of sequencing?
 
-                for(int i = 0; i < baby.Count; i++)
+                for (int i = 0; i < baby.Count; i++)
                 {
-                    baby[i].Update(gameTime);
-                    if (baby[i].Bounds.CollidesWith(player.Bounds))
+                    if (babyActive) 
                     {
-                        lives--;
-                        baby[i].Position = new Vector2(-10, -10);
-                        sleepingBaby.Add(baby[i]);
-                        baby.RemoveAt(i);
-                        babyTimer = 0;
-                        babyEntered = false;
-                        state = GameState.Pause;
-                        if(i > 0) i--;
-                    }
-                    if(baby[i].Position.X < GAME_WIDTH && !babyEntered) 
-                    {
-                        babyEntered = true;
-                    }
-                    if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving  && babyEntered)
-                    {
-                        if (baby[i].bounceY) baby[i].bounceY = false;
-                        else baby[i].bounceY = true;
-                        baby[i].Speed += 5;
-                    }
-                    if((baby[i].Position.X < 0 || baby[i].Position.X > GAME_WIDTH) && !babyLeaving && babyEntered)
-                    {
-                        if (baby[i].bounceX) baby[i].bounceX = false;
-                        else baby[i].bounceX = true;
-                        baby[i].Speed += 5;
-                    }
-                    
-                    if((baby[i].Position.Y < -64 || baby[i].Position.Y > GAME_HEIGHT + 64 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
-                    {
-                        sleepingBaby.Add(baby[i]);
-                        baby.RemoveAt(i);
-                        babyTimer = 0;
-                        babyEntered = false;
-                        i--;
+                        baby[i].Update(gameTime);
+                        if (baby[i].Bounds.CollidesWith(player.Bounds))
+                        {
+                            lives--;
+                            baby[i].Position = new Vector2(-10, -10);
+                            sleepingBaby.Add(baby[i]);
+                            baby.RemoveAt(i);
+                            babyTimer = 0;
+                            babyEntered = false;
+                            babyActive = false;
+                            state = GameState.Pause;
+                            if (i > 0) i--;
+                        }
+                        else if (babyActive && baby[i].Position.X < GAME_WIDTH && !babyEntered)
+                        {
+                            babyEntered = true;
+                        }
+                        else if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving && babyEntered)
+                        {
+                            if (baby[i].bounceY) baby[i].bounceY = false;
+                            else baby[i].bounceY = true;
+                            baby[i].Speed += 5;
+                        }
+                        else if ((baby[i].Position.X < 0 || baby[i].Position.X > GAME_WIDTH) && !babyLeaving && babyEntered)
+                        {
+                            if (baby[i].bounceX) baby[i].bounceX = false;
+                            else baby[i].bounceX = true;
+                            baby[i].Speed += 5;
+                        }
+
+                        else if ((baby[i].Position.Y < -64 || baby[i].Position.Y > GAME_HEIGHT + 64 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
+                        {
+                            sleepingBaby.Add(baby[i]);
+                            baby.RemoveAt(i);
+                            babyTimer = 0;
+                            babyEntered = false;
+                            if (i > 0) i--;
+                        }
                     }
                 }
                 

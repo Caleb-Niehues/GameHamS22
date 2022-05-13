@@ -38,7 +38,8 @@ namespace TimeGame.Sprites.Items
             pixelWidth = 64;
             direction = new Vector2(-1, 1);
             bounds = new BoundingRectangle(Position.X -16, Position.Y - 32, pixelWidth -40, pixelHeight - 32);
-            speed = 50;
+            speed = 75;
+            Color = Color.White;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
