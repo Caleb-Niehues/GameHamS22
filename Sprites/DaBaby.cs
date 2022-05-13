@@ -36,6 +36,7 @@ namespace TimeGame.Sprites.Items
         {
             pixelHeight = 128;
             pixelWidth = 64;
+            direction = new Vector2(-1, 1);
             bounds = new BoundingRectangle(Position.X -16, Position.Y - 32, pixelWidth -40, pixelHeight - 32);
             speed = 50;
         }
@@ -66,15 +67,14 @@ namespace TimeGame.Sprites.Items
         {
             if (bounceX)
             {
-                direction.X = 1;
+                Direction = new Vector2(1,Direction.Y);
             }
-            else direction.X = -1;
+            else Direction = new Vector2(-1,Direction.Y);
             if (bounceY)
             {
-                direction.Y = 1;
+                Direction = new Vector2(Direction.X, 1);
             }
-            else direction.Y = -1;
-
+            else Direction = new Vector2(Direction.X,-1);
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
             bounds.X = Position.X - 16;
