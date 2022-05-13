@@ -37,10 +37,12 @@ namespace TimeGame
         /// </summary>
         public static int GAME_HEIGHT = 64 * 8;
 
-        BoundingRectangle gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
+        BoundingRectangle gameBoundTop = new BoundingRectangle(0, 32, GAME_WIDTH + 128, 0);
         BoundingRectangle gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
         BoundingRectangle gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
         BoundingRectangle gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH, 0, 1, GAME_HEIGHT);
+
+        public static int extraPistolMovementSpeed = 0;
 
         public bool HasBeenInitialized = false;
 
@@ -179,12 +181,13 @@ namespace TimeGame
             lives = 3;
             score = 0;
             scoreBucket = 0;
+            extraPistolMovementSpeed = 0;
             for (int i = 0; i < upgrades.Length; i++)
                 upgrades[i] = 1;
             keyboardState = new KeyboardState(Keys.Enter);
             previousKeyboard = new KeyboardState(Keys.Enter);
             gunTimer = 0;
-            shootTime = 2;
+            shootTime = 1.5;
             difficulty = 2;
             chargerTimer = 0;
             ran = new Random();
@@ -368,6 +371,7 @@ namespace TimeGame
                     {
                         score -= upgrades[1] * costModifier;
                         upgrades[1]++;
+                        extraPistolMovementSpeed += 3;
                         _soundEffects[3].Play();
                     }
                 }
@@ -685,11 +689,11 @@ namespace TimeGame
                 b.Position = player.Arms[player.armIndex].BarrelEnd;
                 if (player.armIndex == 0)
                 {
-                    shootTime = 1 + (1 / upgrades[1]);
+                    shootTime = 0.5 + (1 / upgrades[1]);
                 }
                 else if (player.armIndex == 1)
                 {
-                    shootTime = 4 - (2 / upgrades[2]);
+                    shootTime = 3.5 - (2 / upgrades[2]);
                 }
                 else if (player.armIndex == 2)
                 {

@@ -275,6 +275,13 @@ namespace TimeGame.Sprites
             Camera.Update(gameTime);
         }
 
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)Bounds.X + 20, (int)Bounds.Y, 64, 64), Color.DarkRed * (float).8);
+        }
+
         /// <summary>
         /// Draws the crate
         /// </summary>
@@ -298,7 +305,7 @@ namespace TimeGame.Sprites
                 0,                          // The first index to use
                 12                          // the number of triangles to draw
             );
-            
+            // Debug(gameTime, spriteBatch);
         }
     }
 }
