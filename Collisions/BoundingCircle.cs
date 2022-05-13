@@ -15,14 +15,14 @@ namespace TimeGame.Collisions
         /// <summary>
         /// The Radius of the BoundingCircle
         /// </summary>
-        public float Radius;
+        public int Radius;
 
         /// <summary>
         /// Constructs a new BoundingCircle
         /// </summary>
         /// <param name="center">Center</param>
         /// <param name="radius">Radius</param>
-        public BoundingCircle(Vector2 center, float radius)
+        public BoundingCircle(Vector2 center, int radius)
         {
             Center = center;
             Radius = radius;

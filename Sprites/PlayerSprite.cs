@@ -53,7 +53,7 @@ namespace TimeGame.Sprites
             set => direction = value;
         }
 
-        private int speed = 0;
+        private int speed = 90;
 
         public float GetRotation()
         {
@@ -134,14 +134,17 @@ namespace TimeGame.Sprites
                 if (armIndex == 0)
                 {
                     armIndex = 1;
+                    speed = 80 + TimeGame.extraPistolMovementSpeed;
                 }
                 else if (armIndex == 1)
                 {
                     armIndex = 2;
+                    speed = 80;
                 }
                 else if (armIndex == 2)
                 {
                     armIndex = 0;
+                    speed = 90;
                 }
                
             }
@@ -155,6 +158,13 @@ namespace TimeGame.Sprites
             Arms[armIndex].ArmPowerUp = powerUp;
             
             Arms[armIndex].Update(gameTime);
+        }
+
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.X + 38, (int)bounds.Y + 32, (int)bounds.Width + 10, (int)bounds.Height + 20), Color.DarkRed * (float).8);
         }
 
 
@@ -184,8 +194,9 @@ namespace TimeGame.Sprites
             var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
             Arms[armIndex].Draw(gameTime, spriteBatch);
+            // Debug(gameTime, spriteBatch);
         }
 
-        
+
     }
 }
