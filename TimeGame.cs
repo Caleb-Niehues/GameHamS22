@@ -34,6 +34,7 @@ namespace TimeGame
         private int score;
         private int costModifier = 5;
         private int[] upgrades = { 1, 1, 1, 1 };
+        public static int extraPistolMovementSpeed = 0;
         ////private int[] powerUp = { 0, 100, 100, 100 };
         //private bool hasBeenHit = false;
         //MouseState currentMouse;
@@ -174,7 +175,7 @@ namespace TimeGame
                 else standbyCrates.Add(c);
             }
 
-            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
+            gameBoundTop = new BoundingRectangle(0, 32, GAME_WIDTH + 128, 0);
             gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
             gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
             gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH,0,1,GAME_HEIGHT);
@@ -286,6 +287,7 @@ namespace TimeGame
                     {
                         score -= upgrades[1] * costModifier;
                         upgrades[1]++;
+                        extraPistolMovementSpeed += 3;
                         _soundEffects[3].Play();
                     }
                 }
@@ -347,13 +349,13 @@ namespace TimeGame
 
                 if (gunTimer > shootTime) //break me into a hempler method - private void handleGunShots(gunTimer, shootTime)
                 {
-                    bulletRot = player.Arms[player.armIndex].GetRot();
+                    bulletRot = player.Arms[player.ArmIndex].GetRot();
                     bulletDir = new Vector2(MathF.Cos(bulletRot), MathF.Sin(bulletRot));
                     Random r = new Random();
-                    if (player.armIndex == 1)
+                    if (player.ArmIndex == 1)
                         for (int i = 0; i < 1 + upgrades[2]; i++) 
                         {
-                            bulletRot = player.Arms[player.armIndex].GetRot();
+                            bulletRot = player.Arms[player.ArmIndex].GetRot();
                             double d = r.NextDouble() * (double)(Math.PI / 8);
                             if (i % 2 == 0)
                             {
@@ -366,7 +368,7 @@ namespace TimeGame
                             ShootGun(bulletRot, bulletDir);
                         }
                     else ShootGun(bulletRot, bulletDir);
-                    _soundEffects[player.armIndex].Play();
+                    _soundEffects[player.ArmIndex].Play();
                     // Call gun sound here
                     gunTimer = 0;
                 }
@@ -600,18 +602,18 @@ namespace TimeGame
                 Bullet b = shotBullets[0];
                 b.Direction = dir;
                 b.Rotation = rot;
-                b.Position = player.Arms[player.armIndex].BarrelEnd;
-                if (player.armIndex == 0)
+                b.Position = player.Arms[player.ArmIndex].BarrelEnd;
+                if (player.ArmIndex == 0)
                 {
-                    shootTime = 1 + (1 / upgrades[1]);
+                    shootTime = 0.5 + (1 / upgrades[1]);
                 }
-                else if (player.armIndex == 1)
+                else if (player.ArmIndex == 1)
                 {
-                    shootTime = 4 - (2 / upgrades[2]);
+                    shootTime = 5.5 - (2 / upgrades[2]);
                 }
-                else if (player.armIndex == 2)
+                else if (player.ArmIndex == 2)
                 {
-                    shootTime = 3;
+                    shootTime = 5.5;
                     b.hitCount = 1 + upgrades[3];
                 }
                 bullets.Add(b);

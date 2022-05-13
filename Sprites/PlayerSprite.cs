@@ -23,15 +23,15 @@ namespace TimeGame.Sprites
             Arms[0] = new StartingGun(Position, new Vector2(32, 39));
             Arms[1] = new Shotgun(Position, new Vector2(32, 39));
             Arms[2] = new Sniper(Position, new Vector2(32, 39));
-            armIndex = 0;
+            ArmIndex = 0;
         }
 
-        private MouseState mouseState;
-        private MouseState previousMouseState;
+        private MouseState _mouseState;
+        private MouseState _previousMouseState;
 
         public bool Up;
 
-        public int armIndex = 0;
+        public int ArmIndex = 0;
 
         public Arm[] Arms = new Arm[3];
 
@@ -46,7 +46,7 @@ namespace TimeGame.Sprites
             set => direction = value;
         }
 
-        private int speed = 0;
+        private int _speed = 90;
 
         public float GetRotation()
         {
@@ -59,14 +59,14 @@ namespace TimeGame.Sprites
         /// </summary>
         public int Speed
         {
-            get => speed;
-            set => speed = value;
+            get => _speed;
+            set => _speed = value;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public double Distance => Math.Sqrt(Math.Pow(speed * direction.X, 2) + Math.Pow(speed * direction.Y, 2));
+        public double Distance => Math.Sqrt(Math.Pow(_speed * direction.X, 2) + Math.Pow(_speed * direction.Y, 2));
 
         private BoundingRectangle bounds;
 
@@ -93,8 +93,8 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Player");
-            foreach(Arm arm in Arms)
-            arm.LoadContent(content);
+            foreach(var arm in Arms)
+                arm.LoadContent(content);
         }
 
         /// <summary>
@@ -103,12 +103,11 @@ namespace TimeGame.Sprites
         /// <param name="gameTime">The GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            previousMouseState = mouseState;
-            mouseState = Mouse.GetState();
-            speed = 60;
+            _previousMouseState = _mouseState;
+            _mouseState = Mouse.GetState();
 
             //maybe flip "fast" direction to push you towards the dead zone?
-            if (previousMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed)
+            if (_previousMouseState.LeftButton == ButtonState.Released && _mouseState.LeftButton == ButtonState.Pressed)
             {
                 
                 if (Up)
@@ -122,33 +121,36 @@ namespace TimeGame.Sprites
                     Up = true;
                 }
             }
-            if (previousMouseState.RightButton == ButtonState.Released && mouseState.RightButton == ButtonState.Pressed)
+            if (_previousMouseState.RightButton == ButtonState.Released && _mouseState.RightButton == ButtonState.Pressed)
             {
                 
-                if (armIndex == 0)
+                if (ArmIndex == 0)
                 {
-                    armIndex = 1;
+                    ArmIndex = 1;
+                    _speed = 80 + TimeGame.extraPistolMovementSpeed; 
                 }
-                else if (armIndex == 1)
+                else if (ArmIndex == 1)
                 {
-                    armIndex = 2;
+                    ArmIndex = 2;
+                    _speed = 80;
                 }
-                else if (armIndex == 2)
+                else if (ArmIndex == 2)
                 {
-                    armIndex = 0;
+                    ArmIndex = 0;
+                    _speed = 90;
                 }
                
             }
 
-            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
+            Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * _speed);
             Position.Y = Math.Clamp(Position.Y, 0, 448);
             bounds.X = Position.X - 16;
             bounds.Y = Position.Y - 32;
 
-            Arms[armIndex].BodyPosition = Position;
-            Arms[armIndex].ArmPowerUp = powerUp;
+            Arms[ArmIndex].BodyPosition = Position;
+            Arms[ArmIndex].ArmPowerUp = powerUp;
             
-            Arms[armIndex].Update(gameTime);
+            Arms[ArmIndex].Update(gameTime);
         }
 
         public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
@@ -184,8 +186,8 @@ namespace TimeGame.Sprites
             //Draw the sprite
             var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
-            Arms[armIndex].Draw(gameTime, spriteBatch);
-            Debug(gameTime, spriteBatch);
+            Arms[ArmIndex].Draw(gameTime, spriteBatch);
+            //Debug(gameTime, spriteBatch);
         }
 
         

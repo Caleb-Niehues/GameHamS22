@@ -21,7 +21,7 @@ namespace TimeGame.Sprites
         private List<SoundEffect> _soundEffects = new List<SoundEffect>();
 
         public double pokeTimer = 0;
-        public double pokeTiming = 1.5;
+        public double pokeTiming = 3.2;
         public bool hasPlayed = false;
         public bool hasPlayed2 = false;
 
@@ -44,7 +44,7 @@ namespace TimeGame.Sprites
             pixelWidth = 128;
             pixelHeight = 96;
             Color = Color.White;
-            speed = 20;
+            speed = 300;
             pokeTimer = 0;
             bounds = new BoundingRectangle(50 - 16, 200 - 16, pixelWidth, pixelHeight);
             Random r = new Random();
