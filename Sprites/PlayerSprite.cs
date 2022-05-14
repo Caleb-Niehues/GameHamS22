@@ -59,7 +59,7 @@ namespace TimeGame.Sprites
             set => direction = value;
         }
 
-        private int speed = 90;
+        private int speed = 120;
 
         public float GetRotation()
         {
@@ -94,7 +94,7 @@ namespace TimeGame.Sprites
 
         public void Bounce()
         {
-            Position.Y = Math.Clamp(Position.Y, 0, 448);
+            Position.Y = Math.Clamp(Position.Y, 32, 448);
             direction.Y *= -1;
         }
 
@@ -117,7 +117,7 @@ namespace TimeGame.Sprites
         {
             previousMouseState = mouseState;
             mouseState = Mouse.GetState();
-            speed = 60;
+            //speed = 60;
 
             //maybe flip "fast" direction to push you towards the dead zone?
             if (previousMouseState.LeftButton == ButtonState.Released && mouseState.LeftButton == ButtonState.Pressed)
@@ -140,12 +140,12 @@ namespace TimeGame.Sprites
                 if (armIndex == 0)
                 {
                     armIndex = 1;
-                    speed = 80 + TimeGame.extraPistolMovementSpeed;
+                    speed = 120 + TimeGame.extraPistolMovementSpeed;
                 }
                 else if (armIndex == 1)
                 {
                     armIndex = 2;
-                    speed = 80;
+                    speed = 90;
                 }
                 else if (armIndex == 2)
                 {
@@ -156,7 +156,7 @@ namespace TimeGame.Sprites
             }
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(0, Direction.Y * speed);
-            Position.Y = Math.Clamp(Position.Y, 0, 448);
+            Position.Y = Math.Clamp(Position.Y, 32, 448);
             bounds.X = Position.X - 16;
             bounds.Y = Position.Y - 32;
 
