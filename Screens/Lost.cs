@@ -38,19 +38,19 @@ namespace TimeGame.Screens
             var fourth = tmp[3];
             var fifth = tmp[4];
 
-            spriteBatch.Draw(pixel, new Rectangle(0, 0, Width, Height), Color.DarkRed * (float).8);
-            spriteBatch.DrawString(bangers, "YOU LOSE", new Vector2(200, 50), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            spriteBatch.Draw(pixel, new Rectangle(0, 0, Width + 300, Height + 200), Color.DarkRed * (float).8);
+            spriteBatch.DrawString(bangers, "YOU LOSE", new Vector2(290, 40), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
 
-            spriteBatch.DrawString(bangers, "LEADERBOARD", new Vector2(180, 100), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "LEADERBOARD", new Vector2(270, 100), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
 
-            spriteBatch.DrawString(bangers, first, new Vector2(180, 120), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(bangers, second, new Vector2(180, 140), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(bangers, third, new Vector2(180, 160), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(bangers, fourth, new Vector2(180, 180), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
-            spriteBatch.DrawString(bangers, fifth, new Vector2(180, 200), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, first, new Vector2(230, 160), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, second, new Vector2(230, 210), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, third, new Vector2(230, 260), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, fourth, new Vector2(230, 310), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, fifth, new Vector2(230, 360), Color.White, 0, new Vector2(0, 0), 2.5f, SpriteEffects.None, 0);
 
 
-            spriteBatch.DrawString(bangers, "Press ESC or BACK to go back to main menu", new Vector2(100, 400), Color.White, 0, new Vector2(0, 0), 1f, SpriteEffects.None, 0);
+            spriteBatch.DrawString(bangers, "Press ESC or BACK to go back to main menu", new Vector2(150, 440), Color.White, 0, new Vector2(0, 0), 2f, SpriteEffects.None, 0);
         }
     }
 }

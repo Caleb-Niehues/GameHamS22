@@ -104,6 +104,7 @@ namespace TimeGame
 
         int lives;
         int score;
+        int points;
         int scoreBucket;
         double gunTimer;
         double shootTime;
@@ -218,6 +219,7 @@ namespace TimeGame
             state = GameState.InPlay;
             lives = 3;
             score = 0;
+            points = 0;
             scoreBucket = 0;
             extraPistolMovementSpeed = 0;
             for (int i = 0; i < upgrades.Length; i++)
@@ -410,19 +412,19 @@ namespace TimeGame
             {
                 if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.Q))
                 {
-                    if (score >= upgrades[0] * costModifier * 2 && lives < 4)
+                    if (points >= upgrades[0] * costModifier * 2 && lives < 4)
                     {
                         lives++;
-                        score -= upgrades[0] * costModifier * 2;
+                        points -= upgrades[0] * costModifier * 2;
                         upgrades[0]++;
                         _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (score >= upgrades[1] * costModifier)
+                    if (points >= upgrades[1] * costModifier)
                     {
-                        score -= upgrades[1] * costModifier;
+                        points -= upgrades[1] * costModifier;
                         upgrades[1]++;
                         extraPistolMovementSpeed += 3;
                         _soundEffects[3].Play();
@@ -430,18 +432,18 @@ namespace TimeGame
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.E))
                 {
-                    if (score >= upgrades[2] * costModifier)
+                    if (points >= upgrades[2] * costModifier)
                     {
-                        score -= upgrades[2] * costModifier;
+                        points -= upgrades[2] * costModifier;
                         upgrades[2]++;
                         _soundEffects[3].Play();
                     }
                 }
                 else if (keyboardState != previousKeyboard && keyboardState.IsKeyDown(Keys.R))
                 {
-                    if (score >= upgrades[3] * costModifier)
+                    if (points >= upgrades[3] * costModifier)
                     {
-                        score -= upgrades[3] * costModifier;
+                        points -= upgrades[3] * costModifier;
                         upgrades[3]++;
                         _soundEffects[3].Play();
                     }
@@ -472,12 +474,13 @@ namespace TimeGame
                     babyActive = true;
                     babyTimer = 0;
                     sleepingBaby[0].bounceX = false;
+                    babyLeaving = false;
                     sleepingBaby[0].Position = new Vector2(GAME_WIDTH, ran.Next(128, GAME_HEIGHT - 192));
                     sleepingBaby[0].Speed = 100;
                     baby.Add(sleepingBaby[0]);
                     sleepingBaby.RemoveAt(0);
                 }
-                if(babyTimer > 15 && babyActive)
+                else if(babyTimer > 15 && babyActive)
                 {
                     babyLeaving = true;
                 }
@@ -568,24 +571,28 @@ namespace TimeGame
                             state = GameState.Pause;
                             if (i > 0) i--;
                         }
-                        else if (babyActive && baby[i].Position.X < GAME_WIDTH && !babyEntered)
+                        else if (babyActive && baby[i].Position.X < GAME_WIDTH - 64 && !babyEntered)
                         {
                             babyEntered = true;
                         }
                         else if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving)
                         {
-                            if (baby[i].bounceY) baby[i].bounceY = false;
-                            else baby[i].bounceY = true;
-                            baby[i].Speed += 5;
+                            if (!babyLeaving)
+                            {
+                                if (baby[i].bounceY) baby[i].bounceY = false;
+                                else baby[i].bounceY = true;
+                                baby[i].Speed += 5;
+                            }
                         }
-                        else if ((baby[i].Position.X < 0 || baby[i].Position.X > GAME_WIDTH) && !babyLeaving && babyEntered)
+                        else if ( (baby[i].Position.X < 0 || baby[i].Position.X > GAME_WIDTH - 64) && !babyLeaving && babyEntered)
                         {
+
                             if (baby[i].bounceX) baby[i].bounceX = false;
                             else baby[i].bounceX = true;
                             baby[i].Speed += 5;
                         }
 
-                        else if ((baby[i].Position.Y < -128 || baby[i].Position.Y > GAME_HEIGHT + 128 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
+                        else if ((baby[i].Position.Y < -500 || baby[i].Position.Y > GAME_HEIGHT + 500 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
                         {
                             sleepingBaby.Add(baby[i]);
                             baby.RemoveAt(i);
@@ -785,6 +792,7 @@ namespace TimeGame
                 if (scoreBucket > 100)
                 {
                     score += scoreBucket / 100;
+                    points += scoreBucket / 100;
                     scoreBucket -= score * 100;
                 }
 
@@ -885,7 +893,7 @@ namespace TimeGame
             switch (state)
             {
                 case GameState.Pause:
-                    Pause.Draw(_spriteBatch, score, upgrades);
+                    Pause.Draw(_spriteBatch, points, upgrades);
                     break;
                 case GameState.GameOver:
                     Lost.Draw(_spriteBatch, Leaderboard);
