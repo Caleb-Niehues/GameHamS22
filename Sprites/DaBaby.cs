@@ -32,12 +32,14 @@ namespace TimeGame.Sprites.Items
             set => speed = value;
         }
 
-        public DaBaby()
+        public DaBaby(Texture2D text)
         {
+            if (text != null)
+                this.texture = text;
             pixelHeight = 256;
             pixelWidth = 192;
             direction = new Vector2(-1, 1);
-            bounds = new BoundingRectangle(Position.X -16, Position.Y - 32, pixelWidth -40, pixelHeight - 32);
+            bounds = new BoundingRectangle(Position.X -16, Position.Y - 32, (pixelWidth*.33f) -40, (pixelHeight*.5f) - 32);
             speed = 75;
             Color = Color.White;
         }
@@ -45,10 +47,10 @@ namespace TimeGame.Sprites.Items
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             animationFrame = 0;
-            
+            Vector2 scaling = new Vector2(.33f,.5f);
 
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
-            spriteBatch.Draw(texture, Position, source, Color);
+            spriteBatch.Draw(texture, Position, source, Color, 0, new Vector2(0,0), scaling, SpriteEffects.None, 0);
         }
 
         public override void LoadContent(ContentManager content)

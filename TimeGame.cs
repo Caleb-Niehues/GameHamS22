@@ -267,7 +267,7 @@ namespace TimeGame
             sleepingBaby = new List<DaBaby>();
             for (int i = 0; i < 5; i++)
             {
-                DaBaby b = new DaBaby();
+                DaBaby b = new DaBaby(texture);
                 sleepingBaby.Add(b);
             }
         }
