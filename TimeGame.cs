@@ -69,10 +69,6 @@ namespace TimeGame
         List<Crate> crates;
         List<Crate> standbyCrates;
 
-        /// <summary>
-        /// The height of the game world
-        /// </summary>
-        public static int GAME_HEIGHT = 64 * 8;
         public int virtualWidth
         {
             get
@@ -109,7 +105,7 @@ namespace TimeGame
         double chargerWaitTime = 4.5;
         Matrix translationMatrix = new Matrix();
         Matrix scaleMatrix = new Matrix();
-        double translationTimer;
+        //double translationTimer;
 
         public TimeGame()
         {
@@ -220,14 +216,14 @@ namespace TimeGame
                 armTextures[0] = player.Arms[0].Texture;
                 armTextures[1] = player.Arms[1].Texture;
                 armTextures[2] = player.Arms[2].Texture;
-                player = new PlayerSprite(player.Texture, armTextures);
+                player = new PlayerSprite(player.Texture, armTextures, this, this._graphics);
             }
             else
             {
                 armTextures[0] = null;
                 armTextures[1] = null;
                 armTextures[2] = null;
-                player = new PlayerSprite(null, armTextures);
+                player = new PlayerSprite(null, armTextures, this, this._graphics);
                 _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
             }
 
