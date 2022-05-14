@@ -477,7 +477,7 @@ namespace TimeGame
                     baby.Add(sleepingBaby[0]);
                     sleepingBaby.RemoveAt(0);
                 }
-                if(babyTimer > 30 && babyActive)
+                if(babyTimer > 15 && babyActive)
                 {
                     babyLeaving = true;
                 }
@@ -564,6 +564,7 @@ namespace TimeGame
                             babyTimer = 0;
                             babyEntered = false;
                             babyActive = false;
+                            babyLeaving = false;
                             state = GameState.Pause;
                             if (i > 0) i--;
                         }
@@ -837,7 +838,7 @@ namespace TimeGame
                 translationMatrix = Matrix.CreateTranslation(translationMatrix.Translation.X - 1, 0, 0);
                 if (translationMatrix.Translation.X <= -64)
                 {
-
+                    _tilemap.newFrame();
                     translationMatrix = Matrix.CreateTranslation(0, 0, 0);
                 }
             }
