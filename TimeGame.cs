@@ -352,7 +352,7 @@ namespace TimeGame
                     babyActive = true;
                     babyTimer = 0;
                     sleepingBaby[0].bounceX = false;
-                    sleepingBaby[0].Position = new Vector2(500, ran.Next(128, GAME_HEIGHT - 128));
+                    sleepingBaby[0].Position = new Vector2(GAME_WIDTH, ran.Next(128, GAME_HEIGHT - 192));
                     sleepingBaby[0].Speed = 75;
                     baby.Add(sleepingBaby[0]);
                     sleepingBaby.RemoveAt(0);
