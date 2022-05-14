@@ -69,6 +69,24 @@ namespace TimeGame
         List<Crate> crates;
         List<Crate> standbyCrates;
 
+        /// <summary>
+        /// The height of the game world
+        /// </summary>
+        public static int GAME_HEIGHT = 64 * 8;
+        public int virtualWidth
+        {
+            get
+            {
+                return 64 * 12;
+            }
+        }
+        public int virtualHeight
+        {
+            get
+            {
+                return 64 * 8;
+            }
+        }
         List<Bullet> bullets;
         List<Bullet> shotBullets;
 
@@ -89,6 +107,9 @@ namespace TimeGame
         int costModifier = 5;
         int[] upgrades = { 1, 1, 1, 1 };
         double chargerWaitTime = 4.5;
+        Matrix translationMatrix = new Matrix();
+        Matrix scaleMatrix = new Matrix();
+        double translationTimer;
 
         public TimeGame()
         {
@@ -100,6 +121,7 @@ namespace TimeGame
             _graphics.PreferredBackBufferHeight = GAME_HEIGHT;
             _graphics.ApplyChanges();
 
+            Window.AllowUserResizing = true;
             //Pause.Width = GAME_WIDTH;
             //Pause.Width = GAME_HEIGHT;
             Lost.Width = GAME_WIDTH;
@@ -532,35 +554,37 @@ namespace TimeGame
                             crates.RemoveAt(k);
                             k--;
                         }
-                        bool dead = false;
-                        for (int j = 0; j < bullets.Count; j++)
-                        {
-                            bullets[j].Update(gameTime);
-                            if (bullets[j].Bounds.CollidesWith(crates[k].Bounds) && !dead)
+                        else {
+                            bool dead = false;
+                            for (int j = 0; j < bullets.Count; j++)
                             {
-                                _soundEffects[4].Play();
-                                bullets[j].hitCount -= 1;
-                                if (bullets[j].hitCount <= 0)
+                                bullets[j].Update(gameTime);
+                                if (bullets[j].Bounds.CollidesWith(crates[k].Bounds) && !dead)
                                 {
-                                    bullets[j].Shot = true;
-                                    bullets[j].Position = new Vector2(-10, -10);
-                                    shotBullets.Add(bullets[j]);
-                                    bullets.RemoveAt(j);
-                                    if (j > 0) j--;
+                                    _soundEffects[4].Play();
+                                    bullets[j].hitCount -= 1;
+                                    if (bullets[j].hitCount <= 0)
+                                    {
+                                        bullets[j].Shot = true;
+                                        bullets[j].Position = new Vector2(-10, -10);
+                                        shotBullets.Add(bullets[j]);
+                                        bullets.RemoveAt(j);
+                                        if (j > 0) j--;
+                                    }
+                                    dead = true;
                                 }
-                                dead = true;
                             }
-                        }
-                        if (dead)
-                        {
-                            crates[k].IsActive = false;
-                            standbyPowerUps[0].Position = new Vector2(crates[k].Bounds.X, crates[k].Bounds.Y);
-                            powerUps.Add(standbyPowerUps[0]);
-                            standbyPowerUps.RemoveAt(0);
-                            standbyCrates.Add(crates[k]);
-                            crates.RemoveAt(k);
-                            
-                            k--;
+                            if (dead)
+                            {
+                                crates[k].IsActive = false;
+                                standbyPowerUps[0].Position = new Vector2(crates[k].Bounds.X, crates[k].Bounds.Y);
+                                powerUps.Add(standbyPowerUps[0]);
+                                standbyPowerUps.RemoveAt(0);
+                                standbyCrates.Add(crates[k]);
+                                crates.RemoveAt(k);
+
+                                k--;
+                            }
                         }
                     }
                 }
@@ -716,21 +740,25 @@ namespace TimeGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             translationTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (translationTimer > .1 && state == GameState.InPlay)
+            if (translationTimer > .1)
             {
-                translation = Matrix.CreateTranslation(translation.Translation.X - 1, 0, 0);
-                if (translation.Translation.X <= -64)
+                translationMatrix = Matrix.CreateTranslation(translationMatrix.Translation.X - 1, 0, 0);
+                if (translationMatrix.Translation.X <= -64)
                 {
                     _tilemap.newFrame();
-                    translation = Matrix.CreateTranslation(0, 0, 0);
+                    translationMatrix = Matrix.CreateTranslation(0, 0, 0);
                 }
             }
+            var scaleX = (float)(_graphics.PreferredBackBufferWidth) / virtualWidth;
+            var scaleY = (float)(_graphics.PreferredBackBufferHeight) / virtualHeight;
+            scaleMatrix = Matrix.CreateScale(scaleX, scaleY, 1.0f);
+            translationMatrix *= scaleMatrix;
 
-            _spriteBatch.Begin(transformMatrix: translation); //why do we use two spritebatch calls? -could we just not feed the transform matrix?
+            _spriteBatch.Begin(transformMatrix: translationMatrix); //why do we use two spritebatch calls? -could we just not feed the transform matrix?
             _tilemap.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(transformMatrix: scaleMatrix);
             
             player.Draw(gameTime, _spriteBatch);
             foreach (GruntSprite e in enemies)

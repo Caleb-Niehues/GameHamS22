@@ -14,12 +14,15 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
+
+        private GraphicsDeviceManager _graphics;
+        private TimeGame tg;
         /// <summary>
         /// A constrcutor that can alos be used to reset a player sprite
         /// </summary>
         /// <param name="texture">The texture used to draw the player, used to remember the texture when used as a reset - if null, it is assumed to be handled by LoadContent</param>
         /// <param name="armTextures">The various textures used for the gun arms constructors</param>
-        public PlayerSprite(Texture2D texture, Texture2D[] armTextures)
+        public PlayerSprite(Texture2D texture, Texture2D[] armTextures, TimeGame TG, GraphicsDeviceManager graphics)
         {
             if (texture != null)
                 this.texture = texture;
@@ -31,6 +34,9 @@ namespace TimeGame.Sprites
             this.pixelHeight = 128;
             bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 40, pixelHeight - 32);
             armIndex = 0;
+
+            tg = TG;
+            _graphics = graphics;
         }
 
         private MouseState mouseState;
@@ -157,7 +163,7 @@ namespace TimeGame.Sprites
             Arms[armIndex].BodyPosition = Position;
             Arms[armIndex].ArmPowerUp = powerUp;
             
-            Arms[armIndex].Update(gameTime);
+            Arms[armIndex].Update(gameTime, (_graphics.PreferredBackBufferWidth / tg.virtualWidth), (_graphics.PreferredBackBufferHeight / tg.virtualHeight));
         }
 
         public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
