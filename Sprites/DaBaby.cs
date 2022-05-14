@@ -34,8 +34,8 @@ namespace TimeGame.Sprites.Items
 
         public DaBaby()
         {
-            pixelHeight = 128;
-            pixelWidth = 64;
+            pixelHeight = 256;
+            pixelWidth = 192;
             direction = new Vector2(-1, 1);
             bounds = new BoundingRectangle(Position.X -16, Position.Y - 32, pixelWidth -40, pixelHeight - 32);
             speed = 75;

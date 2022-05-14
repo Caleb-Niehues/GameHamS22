@@ -473,7 +473,7 @@ namespace TimeGame
                     babyTimer = 0;
                     sleepingBaby[0].bounceX = false;
                     sleepingBaby[0].Position = new Vector2(GAME_WIDTH, ran.Next(128, GAME_HEIGHT - 192));
-                    sleepingBaby[0].Speed = 75;
+                    sleepingBaby[0].Speed = 100;
                     baby.Add(sleepingBaby[0]);
                     sleepingBaby.RemoveAt(0);
                 }
@@ -572,7 +572,7 @@ namespace TimeGame
                         {
                             babyEntered = true;
                         }
-                        else if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving && babyEntered)
+                        else if ((baby[i].Bounds.CollidesWith(gameBoundTop) || baby[i].Bounds.CollidesWith(gameBoundBottom)) && !babyLeaving)
                         {
                             if (baby[i].bounceY) baby[i].bounceY = false;
                             else baby[i].bounceY = true;
@@ -585,12 +585,14 @@ namespace TimeGame
                             baby[i].Speed += 5;
                         }
 
-                        else if ((baby[i].Position.Y < -64 || baby[i].Position.Y > GAME_HEIGHT + 64 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
+                        else if ((baby[i].Position.Y < -128 || baby[i].Position.Y > GAME_HEIGHT + 128 || baby[i].Bounds.CollidesWith(gameBoundBack) || baby[i].Bounds.CollidesWith(gameBoundFront)) && babyLeaving)
                         {
                             sleepingBaby.Add(baby[i]);
                             baby.RemoveAt(i);
                             babyTimer = 0;
                             babyEntered = false;
+                            babyActive = false;
+                            babyLeaving = false;
                             if (i > 0) i--;
                         }
                     }
