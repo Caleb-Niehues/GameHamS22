@@ -847,7 +847,7 @@ namespace TimeGame
             translationMatrix *= scaleMatrix;
 
             _spriteBatch.Begin(transformMatrix: translationMatrix); //why do we use two spritebatch calls? -could we just not feed the transform matrix?
-
+            _tilemap.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
             _spriteBatch.Begin(transformMatrix: scaleMatrix);
