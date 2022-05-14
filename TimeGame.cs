@@ -21,67 +21,13 @@ namespace TimeGame
 
     public class TimeGame : Game
     {
-<<<<<<< HEAD
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private SpriteFont _gameFont;
 
-        private List<SoundEffect> _soundEffects = new List<SoundEffect>();
-
-        private GameState state = GameState.InPlay;
-        private int lives = 3;
-        private int scoreBucket;
-        private int score;
-        private int costModifier = 5;
-        private int[] upgrades = { 1, 1, 1, 1 };
-        ////private int[] powerUp = { 0, 100, 100, 100 };
-        //private bool hasBeenHit = false;
-        //MouseState currentMouse;
-        private KeyboardState keyboardState;
-        private KeyboardState previousKeyboard;
-
-        public float bulletRot;
-        public Vector2 bulletDir;
-
-        public PlayerSprite player;
-        public Tilemap _tilemap;
-
-        public List<GruntSprite> enemies;
-        public List<GruntSprite> deadEnemies;
-
-        public List<ChargerSprite> charger;
-        public List<ChargerSprite> chargerStandby;
-
-        public List<PowerUpSprite> powerUps;
-        public List<PowerUpSprite> standbyPowerUps;
-
-        public List<DaBaby> baby;
-        public List<DaBaby> sleepingBaby;
-
-        public List<Crate> crates;
-        public List<Crate> standbyCrates;
-
-        public double gunTimer = 0;
-        public double shootTime = 2.0;
-
-        public int difficulty = 2;
-        private double riserCheck;
-
-        public List<Bullet> bullets;
-        public List<Bullet> shotBullets;
-
-        public bool babyActive = false;
-        public bool babyLeaving = false;
-        public bool babyEntered = false;
-
-        public Random ran = new Random();
-=======
         #region Variables and Constructor
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
         SpriteFont _gameFont;
         List<SoundEffect> _soundEffects = new List<SoundEffect>();
->>>>>>> cleanup
+
 
         /// <summary>
         /// The width of the game world
@@ -98,12 +44,20 @@ namespace TimeGame
         BoundingRectangle gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
         BoundingRectangle gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH, 0, 1, GAME_HEIGHT);
 
-<<<<<<< HEAD
-        public double chargerTimer = 0;
+
+        public List<DaBaby> baby;
+        public List<DaBaby> sleepingBaby;
+
+
+        public bool babyActive = false;
+        public bool babyLeaving = false;
+        public bool babyEntered = false;
+
+
         public double chargeWaitTime = 4.5;//a lot of these need to get moved from new item declaration to Initialize()
         public double babyTimer = 0;
         public Leaderboard Leaderboard;
-=======
+
         public static int extraPistolMovementSpeed = 0;
 
         public bool HasBeenInitialized = false;
@@ -111,8 +65,7 @@ namespace TimeGame
         KeyboardState keyboardState;
         KeyboardState previousKeyboard;
 
-        Leaderboard Leaderboard;
->>>>>>> cleanup
+
 
         Matrix translation = new Matrix();
         double translationTimer;
@@ -189,93 +142,8 @@ namespace TimeGame
         }
         #endregion
 
-<<<<<<< HEAD
-        /// <summary>
-        /// can also be used for restart
-        /// </summary>
-        protected override void Initialize()
-        {
-            player = new PlayerSprite();
-            _tilemap = new Tilemap(GAME_WIDTH, GAME_HEIGHT);
 
-            enemies = new List<GruntSprite>();
-            deadEnemies = new List<GruntSprite>();
 
-            charger = new List<ChargerSprite>();
-            chargerStandby = new List<ChargerSprite>();
-
-            bullets = new List<Bullet>();
-            shotBullets = new List<Bullet>();
-
-            powerUps = new List<PowerUpSprite>();
-            standbyPowerUps = new List<PowerUpSprite>();
-
-            crates = new List<Crate>();
-            standbyCrates = new List<Crate>();
-
-            baby = new List<DaBaby>();
-            sleepingBaby = new List<DaBaby>();
-
-            Leaderboard = new Leaderboard();
-            Leaderboard.Load();
-
-            for(int i = 0; i < 10; i++)
-            {
-                ChargerSprite charge = new ChargerSprite();
-                chargerStandby.Add(charge);
-            }
-
-            Random r = new Random();
-            for (int i = 0; i < 10; i++)
-            {
-                int outerBounds = GAME_WIDTH + 60;
-                Vector2 pos = new Vector2(r.Next(outerBounds, outerBounds + 100), r.Next(0, GAME_HEIGHT));
-                GruntSprite ene = new GruntSprite(pos, player);
-                if (i < difficulty)
-                    enemies.Add(ene);
-                else
-                {
-                    ene.Alive = false;
-                    deadEnemies.Add(ene);
-                }
-            }
-
-            for(int i = 0; i < 5; i++)
-            {
-                DaBaby b = new DaBaby();
-                sleepingBaby.Add(b);
-            }
-
-            for (int i = 0; i < 50; i++)
-            {
-                Bullet b = new Bullet();
-                shotBullets.Add(b);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                PowerUpSprite p = new PowerUpSprite(new Vector2(64*12, 225), new Vector2(-1,0), 50);
-                standbyPowerUps.Add(p);
-            }
-
-            for (int i = 0; i < 10; i++)
-            {
-                Crate c = new Crate(this, CrateType.DarkCross, 2, GAME_WIDTH);
-                if (i < 1) crates.Add(c);
-                else standbyCrates.Add(c);
-            }
-
-            gameBoundTop = new BoundingRectangle(0, -32, GAME_WIDTH + 128, 0);
-            gameBoundBottom = new BoundingRectangle(0, GAME_HEIGHT - 128, GAME_WIDTH + 128, 0);
-            gameBoundFront = new BoundingRectangle(-64, 0, 1, GAME_HEIGHT);
-            gameBoundBack = new BoundingRectangle(64 + GAME_WIDTH,0,1,GAME_HEIGHT);
-
-            base.Initialize();
-        }
-
-=======
-        #region New Game Methods
->>>>>>> cleanup
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -387,6 +255,21 @@ namespace TimeGame
             NewBulletsHelper();
             NewPowerUpsHelper();
             NewCratesHelper();
+            NewBabyHelper();
+        }
+
+        private void NewBabyHelper()
+        {
+            Texture2D texture = null;
+            if (HasBeenInitialized)
+                texture = sleepingBaby[0].Texture;
+            baby = new List<DaBaby>();
+            sleepingBaby = new List<DaBaby>();
+            for (int i = 0; i < 5; i++)
+            {
+                DaBaby b = new DaBaby();
+                sleepingBaby.Add(b);
+            }
         }
 
         private void NewGruntsHelper()
@@ -487,7 +370,7 @@ namespace TimeGame
                 }
             }
         }
-        #endregion
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -583,7 +466,7 @@ namespace TimeGame
                     crates.Add(standbyCrates[0]);
                     standbyCrates.RemoveAt(0);
                 }
-<<<<<<< HEAD
+
                 if(babyTimer > 15 && !babyActive)
                 {
                     babyActive = true;
@@ -598,11 +481,7 @@ namespace TimeGame
                 {
                     babyLeaving = true;
                 }
-                if (chargerTimer > chargeWaitTime) //break me into a helper method - private void handleCharger(chargerTime, chargerWaitTime)
-=======
-
                 if (chargerTimer > chargerWaitTime) //break me into a helper method - private void handleCharger(chargerTime, chargerWaitTime)
->>>>>>> cleanup
                 {
                     chargerStandby[0].Position = new Vector2(-64,ran.Next(128, GAME_HEIGHT - 128));
                     chargerStandby[0].pokeTimer = 0;
@@ -958,7 +837,7 @@ namespace TimeGame
                 translationMatrix = Matrix.CreateTranslation(translationMatrix.Translation.X - 1, 0, 0);
                 if (translationMatrix.Translation.X <= -64)
                 {
-                    _tilemap.newFrame();
+
                     translationMatrix = Matrix.CreateTranslation(0, 0, 0);
                 }
             }
@@ -968,7 +847,7 @@ namespace TimeGame
             translationMatrix *= scaleMatrix;
 
             _spriteBatch.Begin(transformMatrix: translationMatrix); //why do we use two spritebatch calls? -could we just not feed the transform matrix?
-            _tilemap.Draw(gameTime, _spriteBatch);
+
             _spriteBatch.End();
 
             _spriteBatch.Begin(transformMatrix: scaleMatrix);
