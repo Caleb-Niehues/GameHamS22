@@ -11,9 +11,10 @@ namespace TimeGame.Sprites
     public class Bullet : Enemy
     {
 
-        public Bullet()
+        public Bullet(Texture2D texture)
         {
-
+            if (texture != null)
+                this.texture = texture;
         }
 
         public Vector2 Origin;

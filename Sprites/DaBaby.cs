@@ -70,6 +70,7 @@ namespace TimeGame.Sprites.Items
             else Direction = new Vector2(Direction.X,-1);
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
+            Position.Y = Math.Clamp(Position.Y, 0, 448);
             bounds.X = Position.X - 16;
             bounds.Y = Position.Y - 32;
         }

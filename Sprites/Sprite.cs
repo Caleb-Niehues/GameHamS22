@@ -25,6 +25,11 @@ namespace TimeGame.Sprites
         protected Texture2D texture;
 
         /// <summary>
+        /// public facing texture, used for game restart
+        /// </summary>
+        public Texture2D Texture => texture;
+
+        /// <summary>
         /// The Frame of the sprite animation
         /// </summary>
         protected short animationFrame;

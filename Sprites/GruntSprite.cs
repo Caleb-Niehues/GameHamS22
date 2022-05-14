@@ -27,8 +27,6 @@ namespace TimeGame.Sprites
             set => speed = value;
         }
 
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -37,17 +35,20 @@ namespace TimeGame.Sprites
             get => direction;
             set => direction = value;
         }
-        public GruntSprite(Vector2 position, PlayerSprite p)
+
+        public GruntSprite(Vector2 position, PlayerSprite p, Texture2D texture)
         {
+            if(texture != null)
+                this.texture = texture;
             Position = position;
             player = p;
-            Random r = new Random(); 
-            speed = r.Next(50,125);
+            Random r = new Random();
+            speed = r.Next(50, 125);
             Color = Color.White;
             direction = new Vector2(1, 0);
             pixelHeight = 64;
             pixelWidth = 64;
-            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth /2, Position.Y + pixelHeight /2), pixelWidth);
+            bounds = new BoundingCircle(new Vector2(Position.X + pixelWidth / 2, Position.Y + pixelHeight / 2), pixelWidth);
         }
 
         public override void LoadContent(ContentManager content)
@@ -67,22 +68,23 @@ namespace TimeGame.Sprites
             else 
                 y = 0;
 
-
-
             if (Position.Y > player.Position.Y && y != 0)
                 y = -1;
             else if(y != 0)
                 y = 1;
-
-
-
-
 
             Direction = new Vector2(x, y);
 
             Position += (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector2(Direction.X * speed, Direction.Y * speed);
             bounds.Center.X = Position.X + pixelWidth /2;
             bounds.Center.Y = Position.Y + pixelHeight /2;
+        }
+
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.Center.X - (bounds.Radius / 2), (int)bounds.Center.Y - (bounds.Radius / 2), bounds.Radius, bounds.Radius), Color.DarkRed * (float).8);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -103,6 +105,7 @@ namespace TimeGame.Sprites
 
             //Draw the sprite
             var source = new Rectangle(animationFrame * pixelWidth, 0, pixelWidth, pixelHeight);
+            // Debug(gameTime, spriteBatch);
             spriteBatch.Draw(texture, Position, source, Color);
         }
     }

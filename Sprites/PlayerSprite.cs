@@ -14,16 +14,29 @@ namespace TimeGame.Sprites
     /// </summary>
     public class PlayerSprite : Sprite
     {
-        public PlayerSprite()
+
+        private GraphicsDeviceManager _graphics;
+        private TimeGame tg;
+        /// <summary>
+        /// A constrcutor that can alos be used to reset a player sprite
+        /// </summary>
+        /// <param name="texture">The texture used to draw the player, used to remember the texture when used as a reset - if null, it is assumed to be handled by LoadContent</param>
+        /// <param name="armTextures">The various textures used for the gun arms constructors</param>
+        public PlayerSprite(Texture2D texture, Texture2D[] armTextures, TimeGame TG, GraphicsDeviceManager graphics)
         {
+            if (texture != null)
+                this.texture = texture;
+            Arms[0] = new Pistol(Position, new Vector2(32, 39), armTextures[0]);
+            Arms[1] = new Shotgun(Position, new Vector2(32, 39), armTextures[1]);
+            Arms[2] = new Sniper(Position, new Vector2(32, 39), armTextures[2]);
             Position = new Vector2(250, 225);
             this.pixelWidth = 64;
             this.pixelHeight = 128;
             bounds = new BoundingRectangle(Position.X - 16, Position.Y - 32, pixelWidth - 40, pixelHeight - 32);
-            Arms[0] = new StartingGun(Position, new Vector2(32, 39));
-            Arms[1] = new Shotgun(Position, new Vector2(32, 39));
-            Arms[2] = new Sniper(Position, new Vector2(32, 39));
             armIndex = 0;
+
+            tg = TG;
+            _graphics = graphics;
         }
 
         private MouseState mouseState;
@@ -46,11 +59,10 @@ namespace TimeGame.Sprites
             set => direction = value;
         }
 
-        private int speed = 0;
+        private int speed = 90;
 
         public float GetRotation()
         {
-
             return this.Arms[0].GetRot();
         }
 
@@ -93,8 +105,8 @@ namespace TimeGame.Sprites
         public override void LoadContent(ContentManager content)
         {
             texture = content.Load<Texture2D>("Player");
-            foreach(Arm arm in Arms)
-            arm.LoadContent(content);
+            foreach (Arm arm in Arms)
+                arm.LoadContent(content);
         }
 
         /// <summary>
@@ -128,14 +140,17 @@ namespace TimeGame.Sprites
                 if (armIndex == 0)
                 {
                     armIndex = 1;
+                    speed = 80 + TimeGame.extraPistolMovementSpeed;
                 }
                 else if (armIndex == 1)
                 {
                     armIndex = 2;
+                    speed = 80;
                 }
                 else if (armIndex == 2)
                 {
                     armIndex = 0;
+                    speed = 90;
                 }
                
             }
@@ -148,7 +163,14 @@ namespace TimeGame.Sprites
             Arms[armIndex].BodyPosition = Position;
             Arms[armIndex].ArmPowerUp = powerUp;
             
-            Arms[armIndex].Update(gameTime);
+            Arms[armIndex].Update(gameTime, (_graphics.PreferredBackBufferWidth / tg.virtualWidth), (_graphics.PreferredBackBufferHeight / tg.virtualHeight));
+        }
+
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle((int)bounds.X + 38, (int)bounds.Y + 32, (int)bounds.Width + 10, (int)bounds.Height + 20), Color.DarkRed * (float).8);
         }
 
 
@@ -178,8 +200,9 @@ namespace TimeGame.Sprites
             var source = new Rectangle(animationFrame * this.pixelWidth, powerUp * this.pixelHeight, this.pixelWidth, this.pixelHeight);
             spriteBatch.Draw(texture, Position, source, Color);
             Arms[armIndex].Draw(gameTime, spriteBatch);
+            // Debug(gameTime, spriteBatch);
         }
 
-        
+
     }
 }

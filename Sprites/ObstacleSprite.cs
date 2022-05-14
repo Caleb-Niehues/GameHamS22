@@ -84,6 +84,13 @@ namespace TimeGame.Sprites
             bounds.Y = Position.Y - pixelHeight;
         }
 
+        public void Debug(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            Texture2D rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Red });
+            spriteBatch.Draw(rect, new Rectangle(41 * 3, animationFrame * pixelHeight, pixelWidth, pixelHeight), Color.DarkRed * (float).8);
+        }
+
         /// <summary>
         /// Draws the wall
         /// </summary>
@@ -110,6 +117,7 @@ namespace TimeGame.Sprites
             //else animationFrame = 1;
 
             //Draw the sprite
+            // Debug(gameTime, spriteBatch);
             spriteBatch.Draw(texture, Position, source, Color.White);
         }
     }
